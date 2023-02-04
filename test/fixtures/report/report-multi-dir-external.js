@@ -1,4 +1,4 @@
-const Report = require('../../../lib/report')
+const { Report } = require('../../../lib/report')
 const report = new Report({
   include: ['**/*.js'],
   exclude: [],
