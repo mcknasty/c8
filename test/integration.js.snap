@@ -156,7 +156,7 @@ hey
 ---------------------------------------|---------|----------|---------|---------|-------------------
 File                                   | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
 ---------------------------------------|---------|----------|---------|---------|-------------------
-All files                              |    1.91 |       12 |    6.25 |    1.91 |                   
+All files                              |    1.86 |    11.76 |    6.12 |    1.86 |                   
  c8                                    |       0 |        0 |       0 |       0 |                   
   index.js                             |       0 |        0 |       0 |       0 | 1                 
  c8/bin                                |       0 |        0 |       0 |       0 |                   
@@ -167,7 +167,7 @@ All files                              |    1.91 |       12 |    6.25 |    1.91 
   sorter.js                            |       0 |        0 |       0 |       0 | 1-196             
  c8/lib                                |       0 |        0 |       0 |       0 |                   
   is-cjs-esm-bridge.js                 |       0 |        0 |       0 |       0 | 1-10              
-  parse-args.js                        |       0 |        0 |       0 |       0 | 1-218             
+  parse-args.js                        |       0 |        0 |       0 |       0 | 1-242             
   report.js                            |       0 |        0 |       0 |       0 | 1-340             
   source-map-from-file.js              |       0 |        0 |       0 |       0 | 1-100             
  c8/lib/commands                       |       0 |        0 |       0 |       0 |                   
@@ -196,6 +196,8 @@ All files                              |    1.91 |       12 |    6.25 |    1.91 
   main.js                              |       0 |        0 |       0 |       0 | 1-4               
  c8/test/fixtures/all/vanilla/dir      |       0 |        0 |       0 |       0 |                   
   unloaded.js                          |       0 |        0 |       0 |       0 | 1-5               
+ c8/test/fixtures/config               |       0 |        0 |       0 |       0 |                   
+  .nycrc.js                            |       0 |        0 |       0 |       0 | 1-11              
  c8/test/fixtures/multidir1            |       0 |        0 |       0 |       0 |                   
   file1.js                             |       0 |        0 |       0 |       0 | 1                 
  c8/test/fixtures/multidir2            |       0 |        0 |       0 |       0 |                   
