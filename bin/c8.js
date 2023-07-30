@@ -12,14 +12,14 @@ const {
   hideInstrumenterArgs
 } = require('../lib/parse-args')
 
-const instrumenterArgs = hideInstrumenteeArgs()
-let argv = buildYargs().parse(instrumenterArgs)
-
 async function run () {
+  const instrumenterArgs = hideInstrumenteeArgs()
+  let argv = await buildYargs(instrumenterArgs)
+
   if ([
     'check-coverage', 'report'
   ].indexOf(argv._[0]) !== -1) {
-    argv = buildYargs(true).parse(process.argv.slice(2))
+    argv = await buildYargs(process.argv.slice(2), true)
   } else {
     // fs.promises was not added until Node.js v10.0.0, if it doesn't
     // exist, assume we're Node.js v8.x and skip coverage.

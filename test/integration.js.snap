@@ -195,6 +195,8 @@ All files                              |    1.81 |    12.24 |    6.38 |    1.81 
   main.js                              |       0 |        0 |       0 |       0 | 1-4               
  c8/test/fixtures/all/vanilla/dir      |       0 |        0 |       0 |       0 |                   
   unloaded.js                          |       0 |        0 |       0 |       0 | 1-5               
+ c8/test/fixtures/config               |       0 |        0 |       0 |       0 |                   
+  .nycrc.js                            |       0 |        0 |       0 |       0 | 1-11              
  c8/test/fixtures/multidir1            |       0 |        0 |       0 |       0 |                   
   file1.js                             |       0 |        0 |       0 |       0 | 1                 
  c8/test/fixtures/multidir2            |       0 |        0 |       0 |       0 |                   
