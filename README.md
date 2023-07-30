@@ -18,12 +18,24 @@ The above example will output coverage metrics for `foo.js`.
 
 ## CLI Options / Configuration
 
-c8 can be configured via command-line flags, a `c8` section in `package.json`, or a JSON configuration file on disk.
-
-A configuration file can be specified by passing its path on the command line with `--config` or `-c`. If no config option is provided, c8 searches for files named `.c8rc`, `.c8rc.json`, `.nycrc`, or `.nycrc.json`, starting from
-`cwd` and walking up the filesystem tree.
+c8 can be configured via command-line flags, a `c8` section in `package.json`, or a configuration file on disk.
 
 When using `package.json` configuration or a dedicated configuration file, omit the `--` prefix from the long-form of the desired command-line option.
+
+A configuration file can be specified by passing its path on the command line with `--config` or `-c`. If no config option is provided, c8 searches for files named in the table below starting from `cwd` and walking up the filesystem tree.
+
+A variety of file names are available in an effort to stay backwards compatible with nyc and ensure dynamic configuration options depending on the build system.
+
+| File name                                   | File Association   |
+|---------------------------------------------|--------------------|
+| `.c8rc`, `.c8rc.json`                       | JSON               |
+| `.c8rc.yml`, `.c8rc.yaml`                   | YAML               |
+| `.c8rc.js`, `.c8rc.cjs`                     | CommonJS export    |
+| `.c8rc.mjs`                                 | ECMA Script Export |
+| `.nycrc`, `.nycrc.json`                     | JSON               |
+| `.nycrc.yaml`, `.nycrc.yml`                 | YAML               |
+| `.nycrc.js`, `.nycrc.cjs`, `nyc.config.js`  | CommonJS export    |
+| `.nycrc.mjs`                                | ECMA Script Export |
 
 Here is a list of common options. Run `c8 --help` for the full list and documentation.
 
