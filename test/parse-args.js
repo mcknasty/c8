@@ -67,6 +67,7 @@ describe('parse-args', () => {
   })
 
   describe('--config', () => {
+    /** */
     it('c8 process should throw an error message if an invalid configuration file name is passed', () => {
       const invalidConfig = './fixtures/config/.c8.config.py'
       const loadInvalidConfigFile = (file, callBack) => {
@@ -82,7 +83,7 @@ describe('parse-args', () => {
         loadConfigFile(file)
       })
     })
-
+    /** */
     it('config directory should contain all variations of the config file naming convention', () => {
       let count = 0
       const fileMessages = []
