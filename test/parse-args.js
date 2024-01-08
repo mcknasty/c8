@@ -107,10 +107,11 @@ describe('parse-args', () => {
     const filePath = './fixtures/config/'
     describe('c8 variations of config file', () => {
       describe('should be able to read config files with .json, .yml, .yaml, .js, .cjs extensions', () => {
-        beforeEach(beforeTestReadingConfigFile)
+        // beforeEach(beforeTestReadingConfigFile)
 
         const fileNameLineNumberMap = {
           '.c8rc.json': 101,
+          /** * /
           '.c8rc.yml': 69,
           '.c8rc.yaml': 10,
           'c8.config.js': 47,
@@ -119,20 +120,22 @@ describe('parse-args', () => {
           '.c8rc.cjs': 32,
           '.c8.config.js': 47,
           '.c8.config.cjs': 45
+          /** */
         }
 
         testReadingConfigFile(fileNameLineNumberMap, filePath)
 
-        afterEach(afterTestReadingConfigFile)
+        // afterEach(afterTestReadingConfigFile)
       })
     })
 
     describe('nyc variations of config file', () => {
       describe('should be able to read config files with .json, .yml, .yaml, .js, .cjs extensions', () => {
-        beforeEach(beforeTestReadingConfigFile)
+        // beforeEach(beforeTestReadingConfigFile)
 
         const fileNameLineNumberMap = {
           '.nycrc': 51,
+          /** * /
           '.nycrc.json': 96,
           '.nycrc.yml': 99,
           '.nycrc.yaml': 98,
@@ -140,11 +143,12 @@ describe('parse-args', () => {
           'nyc.config.cjs': 94,
           '.nyc.config.js': 85,
           '.nyc.config.cjs': 71
+          /** */
         }
 
         testReadingConfigFile(fileNameLineNumberMap, filePath)
 
-        afterEach(afterTestReadingConfigFile)
+        // afterEach(afterTestReadingConfigFile)
       })
     })
 
