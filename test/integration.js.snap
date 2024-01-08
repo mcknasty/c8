@@ -156,11 +156,7 @@ hey
 ---------------------------------------|---------|----------|---------|---------|------------------------
 File                                   | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s      
 ---------------------------------------|---------|----------|---------|---------|------------------------
-<<<<<<< HEAD
-All files                              |    3.47 |    12.24 |    6.38 |    3.47 |                        
-=======
-All files                              |    3.31 |    11.32 |    5.88 |    3.31 |                        
->>>>>>> 07ccd8e (feat: Adding additional configuration file options)
+All files                              |    3.26 |    11.11 |    5.76 |    3.26 |                        
  c8                                    |       0 |        0 |       0 |       0 |                        
   index.js                             |       0 |        0 |       0 |       0 | 1                      
  c8/bin                                |       0 |        0 |       0 |       0 |                        
@@ -170,14 +166,9 @@ All files                              |    3.31 |    11.32 |    5.88 |    3.31 
   prettify.js                          |       0 |        0 |       0 |       0 | 1-2                    
   sorter.js                            |       0 |        0 |       0 |       0 | 1-196                  
  c8/lib                                |       0 |        0 |       0 |       0 |                        
-<<<<<<< HEAD
   is-cjs-esm-bridge.js                 |       0 |        0 |       0 |       0 | 1-10                   
-  parse-args.js                        |       0 |        0 |       0 |       0 | 1-224                  
-  report.js                            |       0 |        0 |       0 |       0 | 1-417                  
-=======
   parse-args.js                        |       0 |        0 |       0 |       0 | 1-272                  
-  report.js                            |       0 |        0 |       0 |       0 | 1-402                  
->>>>>>> 07ccd8e (feat: Adding additional configuration file options)
+  report.js                            |       0 |        0 |       0 |       0 | 1-417                  
   source-map-from-file.js              |       0 |        0 |       0 |       0 | 1-100                  
  c8/lib/commands                       |       0 |        0 |       0 |       0 |                        
   check-coverage.js                    |       0 |        0 |       0 |       0 | 1-70                   
@@ -537,11 +528,7 @@ hey
 ---------------------------------------|---------|----------|---------|---------|------------------------
 File                                   | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s      
 ---------------------------------------|---------|----------|---------|---------|------------------------
-<<<<<<< HEAD
-All files                              |    3.47 |    12.24 |    6.38 |    3.47 |                        
-=======
-All files                              |    3.31 |    11.32 |    5.88 |    3.31 |                        
->>>>>>> 07ccd8e (feat: Adding additional configuration file options)
+All files                              |    3.26 |    11.11 |    5.76 |    3.26 |                        
  c8                                    |       0 |        0 |       0 |       0 |                        
   index.js                             |       0 |        0 |       0 |       0 | 1                      
  c8/bin                                |       0 |        0 |       0 |       0 |                        
@@ -551,14 +538,9 @@ All files                              |    3.31 |    11.32 |    5.88 |    3.31 
   prettify.js                          |       0 |        0 |       0 |       0 | 1-2                    
   sorter.js                            |       0 |        0 |       0 |       0 | 1-196                  
  c8/lib                                |       0 |        0 |       0 |       0 |                        
-<<<<<<< HEAD
   is-cjs-esm-bridge.js                 |       0 |        0 |       0 |       0 | 1-10                   
-  parse-args.js                        |       0 |        0 |       0 |       0 | 1-224                  
-  report.js                            |       0 |        0 |       0 |       0 | 1-417                  
-=======
   parse-args.js                        |       0 |        0 |       0 |       0 | 1-272                  
-  report.js                            |       0 |        0 |       0 |       0 | 1-402                  
->>>>>>> 07ccd8e (feat: Adding additional configuration file options)
+  report.js                            |       0 |        0 |       0 |       0 | 1-417                  
   source-map-from-file.js              |       0 |        0 |       0 |       0 | 1-100                  
  c8/lib/commands                       |       0 |        0 |       0 |       0 |                        
   check-coverage.js                    |       0 |        0 |       0 |       0 | 1-70                   
