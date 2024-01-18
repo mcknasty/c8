@@ -1,15 +1,11 @@
 /* global describe, before, beforeEach, it */
 
 const { rm } = require('fs')
-const { runSpawn, cleanJson, textGetConfigKey } = require('./print-config-helpers')
+const { runSpawn, textGetConfigKey } = require('./print-config-helpers')
 const c8Path = require.resolve('../bin/c8')
 const nodePath = process.execPath
 const chaiJestSnapshot = require('chai-jest-snapshot')
-const pwd = process.cwd()
-const { should } = require('chai')
-
-// Todo: when bug mentioned below is fixed uncomment
-// const { expect, should } = require('chai')
+const { assert } = require('chai')
 
 require('chai').should()
 require('chai')
@@ -31,9 +27,7 @@ describe('Help Message', () => {
    *   Runs the hep option and compares to a snapshot
    */
   it('ensure the help message is correct', () => {
-    const output = runSpawn([c8Path, '--help'])
-      .replaceAll(pwd, '.')
-      .replaceAll(' ', '')
+    const output = runSpawn([c8Path, '--help'], true, true)
     output.should.matchSnapshot()
   })
 
@@ -45,9 +39,7 @@ describe('Help Message', () => {
    *
    */
   it('ensure \'not enough non-option arguments\' warning message', () => {
-    const output = runSpawn([c8Path])
-      .replaceAll(pwd, '.')
-      .replaceAll(' ', '')
+    const output = runSpawn([c8Path], true, true)
     output.should.matchSnapshot()
   })
 })
@@ -63,7 +55,7 @@ describe('Print derived configuration CLI option', () => {
    *
    */
   it('should not demand any arguments: --print-config=true', () => {
-    const out = runSpawn([c8Path, '--print-config=true']).replaceAll(pwd, '.')
+    const out = runSpawn([c8Path, '--print-config=true'], true, true)
     out.should.matchSnapshot()
   })
 
@@ -77,7 +69,7 @@ describe('Print derived configuration CLI option', () => {
    *
    */
   it('should not demand any arguments: --print-config', () => {
-    const out = runSpawn([c8Path, '--print-config']).replaceAll(pwd, '.')
+    const out = runSpawn([c8Path, '--print-config'], true, true)
     out.should.matchSnapshot()
   })
 
@@ -89,10 +81,7 @@ describe('Print derived configuration CLI option', () => {
    */
   it('should demand arguments: --print-config=false', () => {
     // Run Command./bin/c8.js --print-config=false
-    const out = runSpawn([c8Path, '--print-config=false'])
-      .replaceAll(pwd, '.')
-      .replaceAll(' ', '')
-
+    const out = runSpawn([c8Path, '--print-config=false'], true, true)
     out.should.matchSnapshot()
   })
 
@@ -116,7 +105,7 @@ describe('Print derived configuration CLI option', () => {
       nodePath,
       require.resolve('./fixtures/all/vanilla/main')
     ]
-    const out = runSpawn(args).replaceAll(pwd, '.')
+    const out = runSpawn(args, true, true)
     out.should.matchSnapshot()
   })
 
@@ -128,12 +117,11 @@ describe('Print derived configuration CLI option', () => {
    *  ensure --print-config-format=json prints valid json document
    */
   it('ensure valid json', () => {
-    const out = runSpawn([c8Path, '--print-config', '--print-config-format=json']).replaceAll(pwd, '.')
     try {
-      const jOut = cleanJson(out)
-      jOut.should.matchSnapshot()
+      const out = runSpawn([c8Path, '--print-config', '--print-config-format=json'])
+      out.should.matchSnapshot()
     } catch (e) {
-      should.fail('invalid json document produced from --print-config option')
+      assert.fail('invalid json document produced from --print-config option')
     }
   })
 
@@ -152,14 +140,12 @@ describe('Print derived configuration CLI option', () => {
       '--reporter=lcov,text',
       '--print-config',
       '--print-config-format=json'
-    ]).replaceAll(pwd, '.')
+    ])
 
-    const jOut = cleanJson(out)
-
-    const includesKey = Object.keys(jOut).includes('reporter')
+    const includesKey = Object.keys(out).includes('reporter')
     const checkFor = ['lcov', 'text']
     includesKey.should.eql(true)
-    jOut.reporter.should.eql(checkFor)
+    out.reporter.should.eql(checkFor)
   })
 
   /**
@@ -169,16 +155,18 @@ describe('Print derived configuration CLI option', () => {
    *
    */
   it('ensure default project configuration file is loaded', () => {
-    const out = runSpawn([c8Path, '--print-config', '--print-config-format=json']).replaceAll(pwd, '.')
-    const jOut = cleanJson(out)
+    const out = runSpawn([c8Path, '--print-config', '--print-config-format=json'])
 
-    const includesKey = Object.keys(jOut).includes('config')
+    const includesKey = Object.keys(out).includes('config')
     includesKey.should.eql(true)
-    jOut.config.should.eql('./.nycrc')
+    out.config.endsWith('.nycrc')
   })
 
   ;['text', 'json'].forEach((format) => {
     describe(`${format} format option`, () => {
+      // Can I shorten this line?
+      const textParam = (format === 'text')
+
       /**
        *
        *  Test: ensure loads config file from cli
@@ -186,24 +174,24 @@ describe('Print derived configuration CLI option', () => {
        *
        */
       it('ensure loads config file from cli', () => {
+        // Can I shorten this line?
         const out = runSpawn([
           c8Path,
           '--config=./test/fixtures/config/.c8rc.json',
           '--print-config',
           `--print-config-format=${format}`
-        ]).replaceAll(pwd, '.')
+        ], textParam)
 
         if (format === 'json') {
-          const jOut = cleanJson(out)
-
-          Object.keys(jOut).includes('config').should.eql(true)
-          jOut.config.should.eql('./test/fixtures/config/.c8rc.json')
+          const includesKey = Object.keys(out).includes('config')
+          includesKey.should.eql(true)
+          out.config.should.eql('./test/fixtures/config/.c8rc.json')
         } else if (format === 'text') {
           const value = textGetConfigKey(out, 'config')
           if (value) {
             value.should.eql('./test/fixtures/config/.c8rc.json')
           } else {
-            should.fail('couldn\'t find configuration value for option --config')
+            assert.fail('couldn\'t find configuration value for option --config')
           }
         }
       })
@@ -220,20 +208,19 @@ describe('Print derived configuration CLI option', () => {
           '--reporter=lcov',
           '--print-config',
           `--print-config-format=${format}`
-        ]).replaceAll(pwd, '.')
+        ], textParam)
 
         if (format === 'json') {
-          const jOut = cleanJson(out)
-
-          Object.keys(jOut).includes('reporter').should.eql(true)
-          jOut.reporter.should.eql('lcov')
+          const includesKey = Object.keys(out).includes('reporter')
+          includesKey.should.eql(true)
+          out.reporter.should.eql('lcov')
         } else if (format === 'text') {
           const value = textGetConfigKey(out, 'reporter')
           if (value) {
             // Todo: when the load comma delimited text array bug is fixed, need to adjust this line
             value.should.eql('lcov')
           } else {
-            should.fail('couldn\'t find configuration value for option --reporter')
+            assert.fail('couldn\'t find configuration value for option --reporter')
           }
         }
       })
