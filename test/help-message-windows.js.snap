@@ -1,0 +1,721 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Help Message ensure 'not enough non-option arguments' warning message 1`] = `
+",,c8.js [opts] [script] [opts]
+
+Commands:
+  c8.js check-coverage  check whether coverage is within thresholds provided
+  c8.js report          read V8 coverage data from temp and output report
+
+Reporting options
+  -r, --reporter                   coverage reporter(s) to use [default: \\"text\\"]
+  -o, --reports-dir, --report-dir  directory where coverage reports will be
+                                   output to             [default: \\"./coverage\\"]
+      --all                        supplying --all will cause c8 to consider all
+                                   src files in the current working directory
+                                   when the determining coverage. Respects
+                                   include/exclude.   [boolean] [default: false]
+      --src                        supplying --src will override cwd as the
+                                   default location where --all looks for src
+                                   files. --src can be supplied multiple times
+                                   and each directory will be included. This
+                                   allows for workspaces spanning multiple
+                                   projects                             [string]
+  -n, --include                    a list of specific files that should be
+                                   covered (glob patterns are supported)
+                                                                   [default: []]
+  -x, --exclude                    a list of specific files and directories that
+                                   should be excluded from coverage (glob
+                                   patterns are supported)             [default:
+  [\\"coverage/**\\",\\"packages/*/test{,s}/**\\",\\"**/*.d.ts\\",\\"test{,s}/**\\",\\"test{,-*}.{
+  js,cjs,mjs,ts,tsx,jsx}\\",\\"**/*{.,-}test.{js,cjs,mjs,ts,tsx,jsx}\\",\\"**/__tests__/
+  **\\",\\"**/{ava,babel,nyc}.config.{js,cjs,mjs}\\",\\"**/jest.config.{js,cjs,mjs,ts}\\",
+         \\"**/{karma,rollup,webpack}.config.js\\",\\"**/.{eslint,mocha}rc.{js,cjs}\\"]]
+  -e, --extension                  a list of specific file extensions that
+                                   should be covered
+                            [default: [\\".js\\",\\".cjs\\",\\".mjs\\",\\".ts\\",\\".tsx\\",\\".jsx\\"]]
+  -a, --exclude-after-remap        apply exclude logic to files after they are
+                                   remapped by a source-map
+                                                      [boolean] [default: false]
+      --skip-full                  do not show files with 100% statement,
+                                   branch, and function coverage
+                                                      [boolean] [default: false]
+
+Coverage thresholds
+      --check-coverage  check whether coverage is within thresholds provided
+                                                      [boolean] [default: false]
+      --branches        what % of branches must be covered?[number] [default: 0]
+      --functions       what % of functions must be covered?
+                                                           [number] [default: 0]
+      --lines           what % of lines must be covered?  [number] [default: 90]
+      --statements      what % of statements must be covered?
+                                                           [number] [default: 0]
+      --per-file        check thresholds per file     [boolean] [default: false]
+      --100             shortcut for --check-coverage --lines 100 --functions
+                        100 --branches 100 --statements 100
+                                                      [boolean] [default: false]
+
+Options:
+      --help                  Show help                                [boolean]
+      --version               Show version number                      [boolean]
+  -c, --config                path to JSON configuration file
+                                                            [default: (default)]
+      --exclude-node-modules  whether or not to exclude all node_module folders
+                              (i.e. **/node_modules/**) by default
+                                                       [boolean] [default: true]
+      --temp-directory        directory V8 coverage data is written to and read
+                              from
+                    [default: \\".\\\\coverage\\\\tmp\\"]
+      --clean                 should temp files be deleted before script
+                              execution                [boolean] [default: true]
+      --resolve               resolve paths to alternate base directory
+                                                                   [default: \\"\\"]
+      --wrapper-length        how many bytes is the wrapper prefix on executed
+                              JavaScript                                [number]
+      --omit-relative         omit any paths that are not absolute, e.g.,
+                              internal/net.js          [boolean] [default: true]
+      --allowExternal         supplying --allowExternal will cause c8 to allow
+                              files from outside of your cwd. This applies both
+                              to files discovered in coverage temp files and
+                              also src files discovered if using the --all flag.
+                                                      [boolean] [default: false]
+      --merge-async           supplying --merge-async will merge all v8 coverage
+                              reports asynchronously and incrementally. This is
+                              to avoid OOM issues with Node.js runtime.
+                                                      [boolean] [default: false]
+      --print-config          Print the derived configuration between command
+                              line parameters and loaded configuration file
+                                                      [boolean] [default: false]
+      --print-config-format   Format to print the configuration in.  Accepted
+                              formats are either text or json
+                                                      [string] [default: \\"text\\"]
+
+visit https://git.io/vHysA for list of available reporters
+
+Not enough non-option arguments: got 0, need at least 1
+"
+`;
+
+exports[`Help Message ensure the help message is correct 1`] = `
+",c8.js [opts] [script] [opts]
+
+Commands:
+  c8.js check-coverage  check whether coverage is within thresholds provided
+  c8.js report          read V8 coverage data from temp and output report
+
+Reporting options
+  -r, --reporter                   coverage reporter(s) to use [default: \\"text\\"]
+  -o, --reports-dir, --report-dir  directory where coverage reports will be
+                                   output to             [default: \\"./coverage\\"]
+      --all                        supplying --all will cause c8 to consider all
+                                   src files in the current working directory
+                                   when the determining coverage. Respects
+                                   include/exclude.   [boolean] [default: false]
+      --src                        supplying --src will override cwd as the
+                                   default location where --all looks for src
+                                   files. --src can be supplied multiple times
+                                   and each directory will be included. This
+                                   allows for workspaces spanning multiple
+                                   projects                             [string]
+  -n, --include                    a list of specific files that should be
+                                   covered (glob patterns are supported)
+                                                                   [default: []]
+  -x, --exclude                    a list of specific files and directories that
+                                   should be excluded from coverage (glob
+                                   patterns are supported)             [default:
+  [\\"coverage/**\\",\\"packages/*/test{,s}/**\\",\\"**/*.d.ts\\",\\"test{,s}/**\\",\\"test{,-*}.{
+  js,cjs,mjs,ts,tsx,jsx}\\",\\"**/*{.,-}test.{js,cjs,mjs,ts,tsx,jsx}\\",\\"**/__tests__/
+  **\\",\\"**/{ava,babel,nyc}.config.{js,cjs,mjs}\\",\\"**/jest.config.{js,cjs,mjs,ts}\\",
+         \\"**/{karma,rollup,webpack}.config.js\\",\\"**/.{eslint,mocha}rc.{js,cjs}\\"]]
+  -e, --extension                  a list of specific file extensions that
+                                   should be covered
+                            [default: [\\".js\\",\\".cjs\\",\\".mjs\\",\\".ts\\",\\".tsx\\",\\".jsx\\"]]
+  -a, --exclude-after-remap        apply exclude logic to files after they are
+                                   remapped by a source-map
+                                                      [boolean] [default: false]
+      --skip-full                  do not show files with 100% statement,
+                                   branch, and function coverage
+                                                      [boolean] [default: false]
+
+Coverage thresholds
+      --check-coverage  check whether coverage is within thresholds provided
+                                                      [boolean] [default: false]
+      --branches        what % of branches must be covered?[number] [default: 0]
+      --functions       what % of functions must be covered?
+                                                           [number] [default: 0]
+      --lines           what % of lines must be covered?  [number] [default: 90]
+      --statements      what % of statements must be covered?
+                                                           [number] [default: 0]
+      --per-file        check thresholds per file     [boolean] [default: false]
+      --100             shortcut for --check-coverage --lines 100 --functions
+                        100 --branches 100 --statements 100
+                                                      [boolean] [default: false]
+
+Options:
+      --help                  Show help                                [boolean]
+      --version               Show version number                      [boolean]
+  -c, --config                path to JSON configuration file
+                                                            [default: (default)]
+      --exclude-node-modules  whether or not to exclude all node_module folders
+                              (i.e. **/node_modules/**) by default
+                                                       [boolean] [default: true]
+      --temp-directory        directory V8 coverage data is written to and read
+                              from
+                    [default: \\".\\\\coverage\\\\tmp\\"]
+      --clean                 should temp files be deleted before script
+                              execution                [boolean] [default: true]
+      --resolve               resolve paths to alternate base directory
+                                                                   [default: \\"\\"]
+      --wrapper-length        how many bytes is the wrapper prefix on executed
+                              JavaScript                                [number]
+      --omit-relative         omit any paths that are not absolute, e.g.,
+                              internal/net.js          [boolean] [default: true]
+      --allowExternal         supplying --allowExternal will cause c8 to allow
+                              files from outside of your cwd. This applies both
+                              to files discovered in coverage temp files and
+                              also src files discovered if using the --all flag.
+                                                      [boolean] [default: false]
+      --merge-async           supplying --merge-async will merge all v8 coverage
+                              reports asynchronously and incrementally. This is
+                              to avoid OOM issues with Node.js runtime.
+                                                      [boolean] [default: false]
+      --print-config          Print the derived configuration between command
+                              line parameters and loaded configuration file
+                                                      [boolean] [default: false]
+      --print-config-format   Format to print the configuration in.  Accepted
+                              formats are either text or json
+                                                      [string] [default: \\"text\\"]
+
+visit https://git.io/vHysA for list of available reporters
+,"
+`;
+
+exports[`Help Message should demand arguments: --print-config=false 1`] = `
+",,c8.js [opts] [script] [opts]
+
+Commands:
+  c8.js check-coverage  check whether coverage is within thresholds provided
+  c8.js report          read V8 coverage data from temp and output report
+
+Reporting options
+  -r, --reporter                   coverage reporter(s) to use [default: \\"text\\"]
+  -o, --reports-dir, --report-dir  directory where coverage reports will be
+                                   output to             [default: \\"./coverage\\"]
+      --all                        supplying --all will cause c8 to consider all
+                                   src files in the current working directory
+                                   when the determining coverage. Respects
+                                   include/exclude.   [boolean] [default: false]
+      --src                        supplying --src will override cwd as the
+                                   default location where --all looks for src
+                                   files. --src can be supplied multiple times
+                                   and each directory will be included. This
+                                   allows for workspaces spanning multiple
+                                   projects                             [string]
+  -n, --include                    a list of specific files that should be
+                                   covered (glob patterns are supported)
+                                                                   [default: []]
+  -x, --exclude                    a list of specific files and directories that
+                                   should be excluded from coverage (glob
+                                   patterns are supported)             [default:
+  [\\"coverage/**\\",\\"packages/*/test{,s}/**\\",\\"**/*.d.ts\\",\\"test{,s}/**\\",\\"test{,-*}.{
+  js,cjs,mjs,ts,tsx,jsx}\\",\\"**/*{.,-}test.{js,cjs,mjs,ts,tsx,jsx}\\",\\"**/__tests__/
+  **\\",\\"**/{ava,babel,nyc}.config.{js,cjs,mjs}\\",\\"**/jest.config.{js,cjs,mjs,ts}\\",
+         \\"**/{karma,rollup,webpack}.config.js\\",\\"**/.{eslint,mocha}rc.{js,cjs}\\"]]
+  -e, --extension                  a list of specific file extensions that
+                                   should be covered
+                            [default: [\\".js\\",\\".cjs\\",\\".mjs\\",\\".ts\\",\\".tsx\\",\\".jsx\\"]]
+  -a, --exclude-after-remap        apply exclude logic to files after they are
+                                   remapped by a source-map
+                                                      [boolean] [default: false]
+      --skip-full                  do not show files with 100% statement,
+                                   branch, and function coverage
+                                                      [boolean] [default: false]
+
+Coverage thresholds
+      --check-coverage  check whether coverage is within thresholds provided
+                                                      [boolean] [default: false]
+      --branches        what % of branches must be covered?[number] [default: 0]
+      --functions       what % of functions must be covered?
+                                                           [number] [default: 0]
+      --lines           what % of lines must be covered?  [number] [default: 90]
+      --statements      what % of statements must be covered?
+                                                           [number] [default: 0]
+      --per-file        check thresholds per file     [boolean] [default: false]
+      --100             shortcut for --check-coverage --lines 100 --functions
+                        100 --branches 100 --statements 100
+                                                      [boolean] [default: false]
+
+Options:
+      --help                  Show help                                [boolean]
+      --version               Show version number                      [boolean]
+  -c, --config                path to JSON configuration file
+                                                            [default: (default)]
+      --exclude-node-modules  whether or not to exclude all node_module folders
+                              (i.e. **/node_modules/**) by default
+                                                       [boolean] [default: true]
+      --temp-directory        directory V8 coverage data is written to and read
+                              from
+                    [default: \\".\\\\coverage\\\\tmp\\"]
+      --clean                 should temp files be deleted before script
+                              execution                [boolean] [default: true]
+      --resolve               resolve paths to alternate base directory
+                                                                   [default: \\"\\"]
+      --wrapper-length        how many bytes is the wrapper prefix on executed
+                              JavaScript                                [number]
+      --omit-relative         omit any paths that are not absolute, e.g.,
+                              internal/net.js          [boolean] [default: true]
+      --allowExternal         supplying --allowExternal will cause c8 to allow
+                              files from outside of your cwd. This applies both
+                              to files discovered in coverage temp files and
+                              also src files discovered if using the --all flag.
+                                                      [boolean] [default: false]
+      --merge-async           supplying --merge-async will merge all v8 coverage
+                              reports asynchronously and incrementally. This is
+                              to avoid OOM issues with Node.js runtime.
+                                                      [boolean] [default: false]
+      --print-config          Print the derived configuration between command
+                              line parameters and loaded configuration file
+                                                      [boolean] [default: false]
+      --print-config-format   Format to print the configuration in.  Accepted
+                              formats are either text or json
+                                                      [string] [default: \\"text\\"]
+
+visit https://git.io/vHysA for list of available reporters
+
+Not enough non-option arguments: got 0, need at least 1
+"
+`;
+
+exports[`Help Message should not demand any arguments: --print-config 1`] = `
+",
+
+
+/* ________/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_        _____/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\____         */
+/*  _____/\\\\\\\\\\\\////////__        ___/\\\\\\\\\\\\///////\\\\\\\\\\\\__        */
+/*   ___/\\\\\\\\\\\\/___________        __\\\\/\\\\\\\\\\\\_____\\\\/\\\\\\\\\\\\__       */
+/*    __/\\\\\\\\\\\\_____________        __\\\\///\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\/___      */
+/*     _\\\\/\\\\\\\\\\\\_____________        ___/\\\\\\\\\\\\///////\\\\\\\\\\\\__     */
+/*      _\\\\//\\\\\\\\\\\\____________        __/\\\\\\\\\\\\______\\\\//\\\\\\\\\\\\_    */
+/*       __\\\\///\\\\\\\\\\\\__________        _\\\\//\\\\\\\\\\\\______/\\\\\\\\\\\\__   */
+/*        ____\\\\////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_        __\\\\///\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\/___  */
+/*         _______\\\\/////////__        ____\\\\/////////_____ */
+
+
+
+Command Issued:     c8 --print-config
+Config File Loaded: .\\\\.nycrc
+
+
+
+Derived Configuration from CLI options and configuration file
+------------------------------------------------------------------------------
+100:                           false
+print-config:                  true
+reporter:                      [
+				 \\"html\\",
+				 \\"text\\"
+                               ]
+lines:                         95
+branches:                      82
+statements:                    95
+config:                        '.\\\\.nycrc'
+reports-dir:                   './coverage'
+report-dir:                    './coverage'
+all:                           false
+src:                           undefined
+exclude-node-modules:          true
+include:                       
+exclude:                       [
+				 \\"coverage/**\\",
+				 \\"packages/*/test{,s}/**\\",
+				 \\"**/*.d.ts\\",
+				 \\"test{,s}/**\\",
+				 \\"test{,-*}.{js,cjs,mjs,ts,tsx,jsx}\\",
+				 \\"**/*{.,-}test.{js,cjs,mjs,ts,tsx,jsx}\\",
+				 \\"**/__tests__/**\\",
+				 \\"**/{ava,babel,nyc}.config.{js,cjs,mjs}\\",
+				 \\"**/jest.config.{js,cjs,mjs,ts}\\",
+				 \\"**/{karma,rollup,webpack}.config.js\\",
+				 \\"**/.{eslint,mocha}rc.{js,cjs}\\"
+                               ]
+extension:                     [
+				 \\".js\\",
+				 \\".cjs\\",
+				 \\".mjs\\",
+				 \\".ts\\",
+				 \\".tsx\\",
+				 \\".jsx\\"
+                               ]
+exclude-after-remap:           false
+skip-full:                     false
+check-coverage:                false
+functions:                     0
+per-file:                      false
+temp-directory:                '.\\\\coverage\\\\tmp'
+clean:                         true
+resolve:                       ''
+omit-relative:                 true
+allow-external:                false
+merge-async:                   false
+print-config-format:           'text'
+
+,"
+`;
+
+exports[`Help Message should not demand any arguments: --print-config=true 1`] = `
+",
+
+
+/* ________/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_        _____/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\____         */
+/*  _____/\\\\\\\\\\\\////////__        ___/\\\\\\\\\\\\///////\\\\\\\\\\\\__        */
+/*   ___/\\\\\\\\\\\\/___________        __\\\\/\\\\\\\\\\\\_____\\\\/\\\\\\\\\\\\__       */
+/*    __/\\\\\\\\\\\\_____________        __\\\\///\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\/___      */
+/*     _\\\\/\\\\\\\\\\\\_____________        ___/\\\\\\\\\\\\///////\\\\\\\\\\\\__     */
+/*      _\\\\//\\\\\\\\\\\\____________        __/\\\\\\\\\\\\______\\\\//\\\\\\\\\\\\_    */
+/*       __\\\\///\\\\\\\\\\\\__________        _\\\\//\\\\\\\\\\\\______/\\\\\\\\\\\\__   */
+/*        ____\\\\////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_        __\\\\///\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\/___  */
+/*         _______\\\\/////////__        ____\\\\/////////_____ */
+
+
+
+Command Issued:     c8 --print-config=true
+Config File Loaded: .\\\\.nycrc
+
+
+
+Derived Configuration from CLI options and configuration file
+------------------------------------------------------------------------------
+100:                           false
+print-config:                  true
+reporter:                      [
+				 \\"html\\",
+				 \\"text\\"
+                               ]
+lines:                         95
+branches:                      82
+statements:                    95
+config:                        '.\\\\.nycrc'
+reports-dir:                   './coverage'
+report-dir:                    './coverage'
+all:                           false
+src:                           undefined
+exclude-node-modules:          true
+include:                       
+exclude:                       [
+				 \\"coverage/**\\",
+				 \\"packages/*/test{,s}/**\\",
+				 \\"**/*.d.ts\\",
+				 \\"test{,s}/**\\",
+				 \\"test{,-*}.{js,cjs,mjs,ts,tsx,jsx}\\",
+				 \\"**/*{.,-}test.{js,cjs,mjs,ts,tsx,jsx}\\",
+				 \\"**/__tests__/**\\",
+				 \\"**/{ava,babel,nyc}.config.{js,cjs,mjs}\\",
+				 \\"**/jest.config.{js,cjs,mjs,ts}\\",
+				 \\"**/{karma,rollup,webpack}.config.js\\",
+				 \\"**/.{eslint,mocha}rc.{js,cjs}\\"
+                               ]
+extension:                     [
+				 \\".js\\",
+				 \\".cjs\\",
+				 \\".mjs\\",
+				 \\".ts\\",
+				 \\".tsx\\",
+				 \\".jsx\\"
+                               ]
+exclude-after-remap:           false
+skip-full:                     false
+check-coverage:                false
+functions:                     0
+per-file:                      false
+temp-directory:                '.\\\\coverage\\\\tmp'
+clean:                         true
+resolve:                       ''
+omit-relative:                 true
+allow-external:                false
+merge-async:                   false
+print-config-format:           'text'
+
+,"
+`;
+
+exports[`Help Message should not demand arguments: --print-config=false 1`] = `
+",zero
+positive
+negative
+--------------|---------|----------|---------|---------|-------------------
+File          | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+--------------|---------|----------|---------|---------|-------------------
+All files     |   64.28 |    66.66 |      50 |   64.28 |                   
+ vanilla      |   78.26 |       75 |     100 |   78.26 |                   
+  loaded.js   |   73.68 |    71.42 |     100 |   73.68 | 4-5,16-18         
+  main.js     |     100 |      100 |     100 |     100 |                   
+ vanilla/dir  |       0 |        0 |       0 |       0 |                   
+  unloaded.js |       0 |        0 |       0 |       0 | 1-5               
+--------------|---------|----------|---------|---------|-------------------
+,"
+`;
+
+exports[`should demand arguments: --print-config=false 1`] = `
+",,c8.js [opts] [script] [opts]
+
+Commands:
+  c8.js check-coverage  check whether coverage is within thresholds provided
+  c8.js report          read V8 coverage data from temp and output report
+
+Reporting options
+  -r, --reporter                   coverage reporter(s) to use [default: \\"text\\"]
+  -o, --reports-dir, --report-dir  directory where coverage reports will be
+                                   output to             [default: \\"./coverage\\"]
+      --all                        supplying --all will cause c8 to consider all
+                                   src files in the current working directory
+                                   when the determining coverage. Respects
+                                   include/exclude.   [boolean] [default: false]
+      --src                        supplying --src will override cwd as the
+                                   default location where --all looks for src
+                                   files. --src can be supplied multiple times
+                                   and each directory will be included. This
+                                   allows for workspaces spanning multiple
+                                   projects                             [string]
+  -n, --include                    a list of specific files that should be
+                                   covered (glob patterns are supported)
+                                                                   [default: []]
+  -x, --exclude                    a list of specific files and directories that
+                                   should be excluded from coverage (glob
+                                   patterns are supported)             [default:
+  [\\"coverage/**\\",\\"packages/*/test{,s}/**\\",\\"**/*.d.ts\\",\\"test{,s}/**\\",\\"test{,-*}.{
+  js,cjs,mjs,ts,tsx,jsx}\\",\\"**/*{.,-}test.{js,cjs,mjs,ts,tsx,jsx}\\",\\"**/__tests__/
+  **\\",\\"**/{ava,babel,nyc}.config.{js,cjs,mjs}\\",\\"**/jest.config.{js,cjs,mjs,ts}\\",
+         \\"**/{karma,rollup,webpack}.config.js\\",\\"**/.{eslint,mocha}rc.{js,cjs}\\"]]
+  -e, --extension                  a list of specific file extensions that
+                                   should be covered
+                            [default: [\\".js\\",\\".cjs\\",\\".mjs\\",\\".ts\\",\\".tsx\\",\\".jsx\\"]]
+  -a, --exclude-after-remap        apply exclude logic to files after they are
+                                   remapped by a source-map
+                                                      [boolean] [default: false]
+      --skip-full                  do not show files with 100% statement,
+                                   branch, and function coverage
+                                                      [boolean] [default: false]
+
+Coverage thresholds
+      --check-coverage  check whether coverage is within thresholds provided
+                                                      [boolean] [default: false]
+      --branches        what % of branches must be covered?[number] [default: 0]
+      --functions       what % of functions must be covered?
+                                                           [number] [default: 0]
+      --lines           what % of lines must be covered?  [number] [default: 90]
+      --statements      what % of statements must be covered?
+                                                           [number] [default: 0]
+      --per-file        check thresholds per file     [boolean] [default: false]
+      --100             shortcut for --check-coverage --lines 100 --functions
+                        100 --branches 100 --statements 100
+                                                      [boolean] [default: false]
+
+Options:
+      --help                  Show help                                [boolean]
+      --version               Show version number                      [boolean]
+  -c, --config                path to JSON configuration file
+                                                            [default: (default)]
+      --exclude-node-modules  whether or not to exclude all node_module folders
+                              (i.e. **/node_modules/**) by default
+                                                       [boolean] [default: true]
+      --temp-directory        directory V8 coverage data is written to and read
+                              from
+                    [default: \\".\\\\coverage\\\\tmp\\"]
+      --clean                 should temp files be deleted before script
+                              execution                [boolean] [default: true]
+      --resolve               resolve paths to alternate base directory
+                                                                   [default: \\"\\"]
+      --wrapper-length        how many bytes is the wrapper prefix on executed
+                              JavaScript                                [number]
+      --omit-relative         omit any paths that are not absolute, e.g.,
+                              internal/net.js          [boolean] [default: true]
+      --allowExternal         supplying --allowExternal will cause c8 to allow
+                              files from outside of your cwd. This applies both
+                              to files discovered in coverage temp files and
+                              also src files discovered if using the --all flag.
+                                                      [boolean] [default: false]
+      --merge-async           supplying --merge-async will merge all v8 coverage
+                              reports asynchronously and incrementally. This is
+                              to avoid OOM issues with Node.js runtime.
+                                                      [boolean] [default: false]
+      --print-config          Print the derived configuration between command
+                              line parameters and loaded configuration file
+                                                      [boolean] [default: false]
+      --print-config-format   Format to print the configuration in.  Accepted
+                              formats are either text or json
+                                                      [string] [default: \\"text\\"]
+
+visit https://git.io/vHysA for list of available reporters
+
+Not enough non-option arguments: got 0, need at least 1
+"
+`;
+
+exports[`should not demand any arguments: --print-config 1`] = `
+",
+
+
+/* ________/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_        _____/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\____         */
+/*  _____/\\\\\\\\\\\\////////__        ___/\\\\\\\\\\\\///////\\\\\\\\\\\\__        */
+/*   ___/\\\\\\\\\\\\/___________        __\\\\/\\\\\\\\\\\\_____\\\\/\\\\\\\\\\\\__       */
+/*    __/\\\\\\\\\\\\_____________        __\\\\///\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\/___      */
+/*     _\\\\/\\\\\\\\\\\\_____________        ___/\\\\\\\\\\\\///////\\\\\\\\\\\\__     */
+/*      _\\\\//\\\\\\\\\\\\____________        __/\\\\\\\\\\\\______\\\\//\\\\\\\\\\\\_    */
+/*       __\\\\///\\\\\\\\\\\\__________        _\\\\//\\\\\\\\\\\\______/\\\\\\\\\\\\__   */
+/*        ____\\\\////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_        __\\\\///\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\/___  */
+/*         _______\\\\/////////__        ____\\\\/////////_____ */
+
+
+
+Command Issued:     c8 --print-config
+Config File Loaded: .\\\\.nycrc
+
+
+
+Derived Configuration from CLI options and configuration file
+------------------------------------------------------------------------------
+100:                           false
+print-config:                  true
+reporter:                      [
+				 \\"html\\",
+				 \\"text\\"
+                               ]
+lines:                         95
+branches:                      82
+statements:                    95
+config:                        '.\\\\.nycrc'
+reports-dir:                   './coverage'
+report-dir:                    './coverage'
+all:                           false
+src:                           undefined
+exclude-node-modules:          true
+include:                       
+exclude:                       [
+				 \\"coverage/**\\",
+				 \\"packages/*/test{,s}/**\\",
+				 \\"**/*.d.ts\\",
+				 \\"test{,s}/**\\",
+				 \\"test{,-*}.{js,cjs,mjs,ts,tsx,jsx}\\",
+				 \\"**/*{.,-}test.{js,cjs,mjs,ts,tsx,jsx}\\",
+				 \\"**/__tests__/**\\",
+				 \\"**/{ava,babel,nyc}.config.{js,cjs,mjs}\\",
+				 \\"**/jest.config.{js,cjs,mjs,ts}\\",
+				 \\"**/{karma,rollup,webpack}.config.js\\",
+				 \\"**/.{eslint,mocha}rc.{js,cjs}\\"
+                               ]
+extension:                     [
+				 \\".js\\",
+				 \\".cjs\\",
+				 \\".mjs\\",
+				 \\".ts\\",
+				 \\".tsx\\",
+				 \\".jsx\\"
+                               ]
+exclude-after-remap:           false
+skip-full:                     false
+check-coverage:                false
+functions:                     0
+per-file:                      false
+temp-directory:                '.\\\\coverage\\\\tmp'
+clean:                         true
+resolve:                       ''
+omit-relative:                 true
+allow-external:                false
+merge-async:                   false
+print-config-format:           'text'
+
+,"
+`;
+
+exports[`should not demand any arguments: --print-config=true 1`] = `
+",
+
+
+/* ________/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_        _____/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\____         */
+/*  _____/\\\\\\\\\\\\////////__        ___/\\\\\\\\\\\\///////\\\\\\\\\\\\__        */
+/*   ___/\\\\\\\\\\\\/___________        __\\\\/\\\\\\\\\\\\_____\\\\/\\\\\\\\\\\\__       */
+/*    __/\\\\\\\\\\\\_____________        __\\\\///\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\/___      */
+/*     _\\\\/\\\\\\\\\\\\_____________        ___/\\\\\\\\\\\\///////\\\\\\\\\\\\__     */
+/*      _\\\\//\\\\\\\\\\\\____________        __/\\\\\\\\\\\\______\\\\//\\\\\\\\\\\\_    */
+/*       __\\\\///\\\\\\\\\\\\__________        _\\\\//\\\\\\\\\\\\______/\\\\\\\\\\\\__   */
+/*        ____\\\\////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_        __\\\\///\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\/___  */
+/*         _______\\\\/////////__        ____\\\\/////////_____ */
+
+
+
+Command Issued:     c8 --print-config=true
+Config File Loaded: .\\\\.nycrc
+
+
+
+Derived Configuration from CLI options and configuration file
+------------------------------------------------------------------------------
+100:                           false
+print-config:                  true
+reporter:                      [
+				 \\"html\\",
+				 \\"text\\"
+                               ]
+lines:                         95
+branches:                      82
+statements:                    95
+config:                        '.\\\\.nycrc'
+reports-dir:                   './coverage'
+report-dir:                    './coverage'
+all:                           false
+src:                           undefined
+exclude-node-modules:          true
+include:                       
+exclude:                       [
+				 \\"coverage/**\\",
+				 \\"packages/*/test{,s}/**\\",
+				 \\"**/*.d.ts\\",
+				 \\"test{,s}/**\\",
+				 \\"test{,-*}.{js,cjs,mjs,ts,tsx,jsx}\\",
+				 \\"**/*{.,-}test.{js,cjs,mjs,ts,tsx,jsx}\\",
+				 \\"**/__tests__/**\\",
+				 \\"**/{ava,babel,nyc}.config.{js,cjs,mjs}\\",
+				 \\"**/jest.config.{js,cjs,mjs,ts}\\",
+				 \\"**/{karma,rollup,webpack}.config.js\\",
+				 \\"**/.{eslint,mocha}rc.{js,cjs}\\"
+                               ]
+extension:                     [
+				 \\".js\\",
+				 \\".cjs\\",
+				 \\".mjs\\",
+				 \\".ts\\",
+				 \\".tsx\\",
+				 \\".jsx\\"
+                               ]
+exclude-after-remap:           false
+skip-full:                     false
+check-coverage:                false
+functions:                     0
+per-file:                      false
+temp-directory:                '.\\\\coverage\\\\tmp'
+clean:                         true
+resolve:                       ''
+omit-relative:                 true
+allow-external:                false
+merge-async:                   false
+print-config-format:           'text'
+
+,"
+`;
+
+exports[`should not demand arguments: --print-config=false 1`] = `
+",zero
+positive
+negative
+--------------|---------|----------|---------|---------|-------------------
+File          | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+--------------|---------|----------|---------|---------|-------------------
+All files     |   64.28 |    66.66 |      50 |   64.28 |                   
+ vanilla      |   78.26 |       75 |     100 |   78.26 |                   
+  loaded.js   |   73.68 |    71.42 |     100 |   73.68 | 4-5,16-18         
+  main.js     |     100 |      100 |     100 |     100 |                   
+ vanilla/dir  |       0 |        0 |       0 |       0 |                   
+  unloaded.js |       0 |        0 |       0 |       0 | 1-5               
+--------------|---------|----------|---------|---------|-------------------
+,"
+`;
