@@ -18,7 +18,7 @@ const printConfigUnitTest = () => {
     chaiJestSnapshot.configureUsingMochaContext(this)
   })
 
-  describe('Print derived configuration CLI option', () => {
+  describe('print derived configuration CLI option', () => {
     /**
      *
      *  Test: Ensure Valid JSON
