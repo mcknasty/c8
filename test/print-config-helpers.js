@@ -35,10 +35,10 @@ const cleanJson = (out) => {
 
 const textGetConfigKey = (out, key) => {
   let value = null
-  const keyReg = new RegExp(newLineReturn + key + ':.+' + newLineReturn, 'g')
-  const matches = out.match(keyReg)
-  if (matches && typeof matches[0] === 'string') {
-    const fileName = matches[0].replace(newLineRegEx, '')
+  const keyReg = new RegExp(key + ':.+', 'g')
+  const matches = [...out.matchAll(keyReg)]
+  if (matches.length > 0 && typeof matches[0][0] === 'string') {
+    const fileName = matches[0][0].replace(newLineRegEx, '')
       .replace(key + ':', '')
       .replace(whiteSpaceReg, '')
       .replace(/'/g, '')
