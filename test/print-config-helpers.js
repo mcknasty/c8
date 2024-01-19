@@ -1,24 +1,39 @@
 const { spawnSync } = require('child_process')
-const nodePath = process.execPath
-const pwd = process.cwd()
 const os = require('os')
-const isWin = os.platform() === 'win32'
+
+const nodePath = process.execPath
+const isWin = (os.platform() === 'win32')
+const pwd = process.cwd()
 const whiteSpaceReg = /[\\\s]/g
 const pwdReg = new RegExp(pwd, 'g')
 const newLineReturn = (isWin) ? '\r\n' : '\n'
 const newLineRegEx = new RegExp(newLineReturn, 'g')
+const doubleQuoteReg = /"/g
+const slashReg = /\\/g
 
 const runSpawn = (args, text = false, stripWhiteSpace = false) => {
   const { output } = spawnSync(nodePath, args)
 
   let out = output.toString('utf8')
 
-  if (text) {
+  if (isWin && text) {
+    const jsonEncodedPwd = JSON.stringify(pwd)
+      .replace(doubleQuoteReg, '')
+    const encodedPwdRegEx = new RegExp(jsonEncodedPwd, 'g')
+    out = out.replace(encodedPwdRegEx, '.')
+  } else if (isWin && !text) {
+    const jsonEncodedPwd = JSON.stringify(pwd)
+      .replace(doubleQuoteReg, '')
+      .replace(slashReg, '\\\\')
+    const encodedPwdRegEx = new RegExp(jsonEncodedPwd, 'g')
+    out = out.replace(encodedPwdRegEx, '.')
+  } else if (!isWin) {
     out = out.replace(pwdReg, '.')
-    if (stripWhiteSpace) { out = out.replace(whiteSpaceReg, '') }
-  } else {
-    out = cleanJson(out)
   }
+
+  if (text && stripWhiteSpace) { out = out.replace(whiteSpaceReg, '') }
+
+  if (!text) { out = cleanJson(out) }
 
   return out
 }
