@@ -1,9 +1,11 @@
 /* global it */
 
-const { buildYargs } = require('../lib/parse-args')
+const chaiJestSnapshot = require('chai-jest-snapshot')
 const { spawnSync } = require('child_process')
 const { mkdirSync, copyFileSync, rmSync, existsSync } = require('fs')
-const chaiJestSnapshot = require('chai-jest-snapshot')
+const Path = require('node:path')
+
+const { buildYargs } = require('../lib/parse-args')
 
 const c8Path = require.resolve('../bin/c8')
 const nodePath = process.execPath
@@ -13,17 +15,16 @@ function testReadingConfigFile (fileNameLineNumberMap, filePath) {
   Object.keys(fileNameLineNumberMap).forEach((fileName) => {
     it(`should be able to resolve config file ${fileName} with --config flag`, () => {
       const expectedLines = fileNameLineNumberMap[fileName]
-      const argv = buildYargs().parse(['node', 'c8', 'my-app', '--config', require.resolve(`${filePath}${fileName}`)])
+      const argv = buildYargs().parse(['node', 'c8', 'my-app', '--config', require.resolve(`./${Path.join(filePath, fileName)}`)])
       argv.lines.should.be.equal(expectedLines)
     })
 
-    it(`should be able to resolve config file ${fileName} by detection`, function () {
-      this.skip()
+    it.skip(`should be able to resolve config file ${fileName} by detection`, function () {
       // set the snapshot filename
       chaiJestSnapshot.setTestName(`should be able to resolve config file ${fileName} by detection`)
       chaiJestSnapshot.setFilename('./test/fixtures/config/snapshots/' + fileName + '.snap')
 
-      copyFileSync('./test/fixtures/config/' + fileName, testPath + '/' + fileName)
+      copyFileSync('./test/fixtures/config/' + fileName, Path.join(testPath, fileName))
       // Run V8 in the dir above
       const { output } = spawnSync(nodePath,
         [
@@ -46,8 +47,8 @@ const beforeTestReadingConfigFile = () => {
   mkdirSync(testPath)
 
   // Copy config file in fileName and test/fixtures/normal.js to dir above
-  copyFileSync('./test/fixtures/normal.js', testPath + '/normal.js')
-  copyFileSync('./test/fixtures/async.js', testPath + '/async.js')
+  copyFileSync('./test/fixtures/normal.js', Path.join(testPath, '/normal.js'))
+  copyFileSync('./test/fixtures/async.js', Path.join(testPath, '/async.js'))
 }
 
 const afterTestReadingConfigFile = () => {
