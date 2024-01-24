@@ -3,20 +3,11 @@
 const {
   buildYargs,
   hideInstrumenteeArgs,
-  hideInstrumenterArgs,
-  getConfigFileNames,
-  loadConfigFile
+  hideInstrumenterArgs
 } = require('../lib/parse-args')
 
 const { join, resolve } = require('path')
-const { existsSync } = require('fs')
-const { assert } = require('chai')
 const chaiJestSnapshot = require('chai-jest-snapshot')
-const {
-  testReadingConfigFile,
-  beforeTestReadingConfigFile,
-  afterTestReadingConfigFile
-} = require('./parse-args-helper.js')
 
 require('chai')
   .use(chaiJestSnapshot)
@@ -67,88 +58,6 @@ describe('parse-args', () => {
   })
 
   describe('--config', () => {
-    it('c8 process should throw an error message if an invalid configuration file name is passed', function () {
-      const invalidConfig = './fixtures/config/.c8.config.py'
-      const loadInvalidConfigFile = function (file, callBack) {
-        try {
-          callBack(file)
-          assert.fail('Invalid configuration file loaded')
-        } catch (error) {
-          const expectErrorValue = `Error: Unsupported file type .py while reading file ${invalidConfig}`
-          String(error).should.eql(expectErrorValue)
-        }
-      }
-
-      loadInvalidConfigFile(invalidConfig, function (file) {
-        loadConfigFile(file)
-      })
-    })
-
-    it('config directory should contain all variations of the config file naming convention', () => {
-      let count = 0
-      const fileMessages = []
-      const configFileList = getConfigFileNames()
-      configFileList.forEach((file) => {
-        const fullPath = './test/fixtures/config/' + file
-        if (existsSync(fullPath)) {
-          count++
-        } else {
-          fileMessages.push(`Missing ${file} from ./test/fixtures/config directory`)
-        }
-      })
-
-      if (count === configFileList.length) {
-        assert.equal(count, configFileList.length)
-      } else {
-        const msg = fileMessages.join(' \n      ')
-        assert.equal(fileMessages.length, 0, msg)
-      }
-    })
-
-    const filePath = './fixtures/config/'
-    describe('c8 variations of config file', () => {
-      describe('should be able to read config files with .json, .yml, .yaml, .js, .cjs extensions', () => {
-        beforeEach(beforeTestReadingConfigFile)
-
-        const fileNameLineNumberMap = {
-          '.c8rc.json': 101,
-          '.c8rc.yml': 69,
-          '.c8rc.yaml': 10,
-          'c8.config.js': 47,
-          'c8.config.cjs': 51,
-          '.c8rc.js': 22,
-          '.c8rc.cjs': 32,
-          '.c8.config.js': 47,
-          '.c8.config.cjs': 45
-        }
-
-        testReadingConfigFile(fileNameLineNumberMap, filePath)
-
-        afterEach(afterTestReadingConfigFile)
-      })
-    })
-
-    describe('nyc variations of config file', () => {
-      describe('should be able to read config files with .json, .yml, .yaml, .js, .cjs extensions', () => {
-        beforeEach(beforeTestReadingConfigFile)
-
-        const fileNameLineNumberMap = {
-          '.nycrc': 51,
-          '.nycrc.json': 96,
-          '.nycrc.yml': 99,
-          '.nycrc.yaml': 98,
-          'nyc.config.js': 95,
-          'nyc.config.cjs': 94,
-          '.nyc.config.js': 85,
-          '.nyc.config.cjs': 71
-        }
-
-        testReadingConfigFile(fileNameLineNumberMap, filePath)
-
-        afterEach(afterTestReadingConfigFile)
-      })
-    })
-
     it('should resolve to .nycrc at cwd', () => {
       const argv = buildYargs().parse(['node', 'c8', 'my-app'])
       argv.lines.should.be.equal(95)
