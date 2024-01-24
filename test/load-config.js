@@ -59,18 +59,19 @@ describe(__filename, () => {
     it('config directory should contain all variations of the config file naming convention', () => {
       let count = 0
       const fileMessages = []
-      const configFileList = CONFIG_FILE_NAMES
-      configFileList.forEach((file) => {
+      CONFIG_FILE_NAMES.forEach((file) => {
         const fullPath = './test/fixtures/config/' + file
         if (existsSync(fullPath)) {
           count++
         } else {
-          fileMessages.push(`Missing ${file} from ./test/fixtures/config directory`)
+          fileMessages.push(
+            `Missing ${file} from ./test/fixtures/config directory`
+          )
         }
       })
 
-      if (count === configFileList.length) {
-        assert.equal(count, configFileList.length)
+      if (count === CONFIG_FILE_NAMES.length) {
+        assert.equal(count, CONFIG_FILE_NAMES.length)
       } else {
         const msg = fileMessages.join(' \n      ')
         assert.equal(fileMessages.length, 0, msg)
