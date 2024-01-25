@@ -68,6 +68,12 @@ describe('parse-args', () => {
       argv.tempDirectory.should.be.equal('./foo')
       argv.functions.should.be.equal(24)
     })
+    it('should use config file specified in --config even if it is not a known file name', () => {
+      const argv = buildYargs().parse(['node', 'c8', '--config', require.resolve('./fixtures/config/nonstandard.json')])
+      argv.lines.should.be.equal(420)
+      argv.tempDirectory.should.be.equal('./foo')
+      argv.functions.should.be.equal(24)
+    })
     it('should have -c as an alias', () => {
       const argv = buildYargs().parse(['node', 'c8', '-c', require.resolve('./fixtures/config/.c8rc.json')])
       argv.lines.should.be.equal(101)
