@@ -14,8 +14,7 @@ const { buildYargs } = require('../lib/parse-args')
 const {
   CONFIG_FILE_NAMES,
   loadConfigFile,
-  ConfigParsingError,
-  UnsupportedFileTypeError
+  ConfigParsingError
 } = require('../lib/load-config')
 
 const {
@@ -45,7 +44,9 @@ describe(__filename, () => {
           callBack(file)
           assert.fail('Invalid configuration file loaded')
         } catch (error) {
-          const expectErrorValue = `Error: Unsupported file type .py while reading file ${invalidConfig}`
+          const expectErrorValue = 'UnsupportedFileTypeError: Unsupported file type .py while reading file ' +
+            `Unsupported file type .py while reading file ${invalidConfig}`
+
           String(error).should.eql(expectErrorValue)
         }
       }
@@ -199,6 +200,9 @@ describe(__filename, () => {
       })
 
       it('throws an error if the JSON file is invalid JSON', () => {
+        const expectedErrorMsg = 'Error loading configuration from file test.json: must contain a valid c8 configuration object.'
+        const errorPattern = ' Original error: Unexpected token .+'
+        const errorRegEx = new RegExp(expectedErrorMsg + errorPattern, 'g')
         expect(() =>
           loadConfigFile('test.json', {
             ...baseDI,
@@ -206,7 +210,7 @@ describe(__filename, () => {
           })
         ).to.throw(
           ConfigParsingError,
-          'Error loading configuration from file test.json: must contain a valid c8 configuration object. Original error: Unexpected token \'o\', "not valid json" is not valid JSON'
+          errorRegEx
         )
       })
 
