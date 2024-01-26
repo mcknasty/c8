@@ -1,17 +1,12 @@
 /* global describe, it */
 
 const { resolve, join } = require('path')
-const chaiJestSnapshot = require('chai-jest-snapshot')
 
 const {
   buildYargs,
   hideInstrumenteeArgs,
   hideInstrumenterArgs
 } = require('../lib/parse-args')
-
-require('chai')
-  .use(chaiJestSnapshot)
-  .should()
 
 describe('parse-args', () => {
   describe('hideInstrumenteeArgs', () => {
