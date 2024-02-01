@@ -1,0 +1,10 @@
+{
+  "reporter": [
+    "lcov",
+    "json"
+  ],
+  "statements": 22,
+  "branches": 33,
+  "lines": 44,
+  "functions": 34
+}
