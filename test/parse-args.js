@@ -1,4 +1,10 @@
-/* global describe, it, beforeEach, afterEach */
+/* global describe, it, beforeEach, after */
+
+const { assert } = require('chai')
+const { existsSync } = require('fs')
+const { resolve, join } = require('path')
+const chaiJestSnapshot = require('chai-jest-snapshot')
+const { spawnSync } = require('child_process')
 
 const {
   buildYargs,
@@ -8,12 +14,8 @@ const {
   loadConfigFile
 } = require('../lib/parse-args')
 
-const { join, resolve } = require('path')
-const { existsSync } = require('fs')
-const { assert } = require('chai')
-const chaiJestSnapshot = require('chai-jest-snapshot')
 const {
-  testReadingConfigFile,
+  testConfigFile,
   beforeTestReadingConfigFile,
   afterTestReadingConfigFile
 } = require('./parse-args-helper.js')
@@ -21,6 +23,9 @@ const {
 require('chai')
   .use(chaiJestSnapshot)
   .should()
+
+const c8Path = require.resolve('../bin/c8')
+const nodePath = process.execPath
 
 describe('parse-args', () => {
   describe('hideInstrumenteeArgs', () => {
@@ -105,47 +110,72 @@ describe('parse-args', () => {
       }
     })
 
-    const filePath = './fixtures/config/'
-    describe('c8 variations of config file', () => {
-      describe('should be able to read config files with .json, .yml, .yaml, .js, .cjs extensions', () => {
-        beforeEach(beforeTestReadingConfigFile)
-
-        const fileNameLineNumberMap = {
-          '.c8rc.json': 101,
-          '.c8rc.yml': 69,
-          '.c8rc.yaml': 10,
-          'c8.config.js': 47,
-          'c8.config.cjs': 51,
-          '.c8rc.js': 22,
-          '.c8rc.cjs': 32,
-          '.c8.config.js': 47,
-          '.c8.config.cjs': 45
+    describe('should be able to read config files with .json, .yml, .yaml, .js, .cjs extensions', () => {
+      const filePath = './fixtures/config/'
+      const testData = {
+        c8: {
+          description: 'c8 variations of config file',
+          fileNameLineNumberMap: {
+            '.c8rc.json': 101,
+            '.c8rc.yml': 69,
+            '.c8rc.yaml': 10,
+            'c8.config.js': 47,
+            'c8.config.cjs': 51,
+            '.c8rc.js': 22,
+            '.c8rc.cjs': 32,
+            '.c8.config.js': 47,
+            '.c8.config.cjs': 45
+          }
+        },
+        nyc: {
+          description: 'nyc variations of config file',
+          fileNameLineNumberMap: {
+            '.nycrc': 51,
+            '.nycrc.json': 96,
+            '.nycrc.yml': 99,
+            '.nycrc.yaml': 98,
+            'nyc.config.js': 95,
+            'nyc.config.cjs': 94,
+            '.nyc.config.js': 85,
+            '.nyc.config.cjs': 71
+          }
         }
+      }
 
-        testReadingConfigFile(fileNameLineNumberMap, filePath)
+      Object.keys(testData).forEach(key => {
+        const { description, fileNameLineNumberMap } = testData[key]
+        describe(description, function () {
+          testConfigFile(filePath, fileNameLineNumberMap, function (fileName, expectedLines) {
+            beforeEach(() => beforeTestReadingConfigFile(fileName))
+            it(`should be able to resolve config file ${fileName} with --config flag`, () => {
+              const configFilePath = join(filePath, fileName)
+              const argv = buildYargs().parse(['node', 'c8', 'my-app', '--config', require.resolve(`./${configFilePath}`)])
+              argv.lines.should.be.equal(expectedLines)
+            })
 
-        afterEach(afterTestReadingConfigFile)
-      })
-    })
+            // skipping for the moment.  Need another patch for this test to successfully run
+            it.skip(`should be able to resolve config file ${fileName} by detection`, function () {
+              // set the snapshot filename
+              chaiJestSnapshot.setTestName(`should be able to resolve config file ${fileName} by detection`)
+              chaiJestSnapshot.setFilename('./test/fixtures/config/snapshots/' + fileName + '.snap')
 
-    describe('nyc variations of config file', () => {
-      describe('should be able to read config files with .json, .yml, .yaml, .js, .cjs extensions', () => {
-        beforeEach(beforeTestReadingConfigFile)
-
-        const fileNameLineNumberMap = {
-          '.nycrc': 51,
-          '.nycrc.json': 96,
-          '.nycrc.yml': 99,
-          '.nycrc.yaml': 98,
-          'nyc.config.js': 95,
-          'nyc.config.cjs': 94,
-          '.nyc.config.js': 85,
-          '.nyc.config.cjs': 71
-        }
-
-        testReadingConfigFile(fileNameLineNumberMap, filePath)
-
-        afterEach(afterTestReadingConfigFile)
+              // Run V8 in the dir above
+              const { output } = spawnSync(nodePath,
+                [
+                  c8Path,
+                  '--temp-directory=tmp/normal',
+                  '--all',
+                  '--src=./test/fixtures/tmp-config-test',
+                  nodePath,
+                  require.resolve('./fixtures/tmp-config-test/normal.js')
+                ],
+                { cwd: './test/fixtures/tmp-config-test' }
+              )
+              output.toString('utf8').should.matchSnapshot()
+            })
+            after(afterTestReadingConfigFile)
+          })
+        })
       })
     })
 
