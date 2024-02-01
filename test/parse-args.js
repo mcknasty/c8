@@ -8,9 +8,9 @@ const {
   loadConfigFile
 } = require('../lib/parse-args')
 
-const { join, resolve } = require('path')
+const { join, resolve, extname } = require('path')
 const { existsSync } = require('fs')
-const { assert } = require('chai')
+const { assert, expect } = require('chai')
 const chaiJestSnapshot = require('chai-jest-snapshot')
 const {
   testReadingConfigFile,
@@ -148,6 +148,42 @@ describe('parse-args', () => {
         afterEach(afterTestReadingConfigFile)
       })
     })
+
+    describe('case sensitivity', function() {
+      const configFilePath = './test/fixtures/config/'
+      // const configFilePath = './fixtures/config/'
+      const JsonConfigs = [
+        { file: configFilePath + '.c8rc.JSON', statements: 20 },
+        { file: configFilePath + '.c8rc.JSon', statements: 22 }
+      ]
+      for (const config of JsonConfigs) {
+        const ext = extname(config.file)
+        it(`reads a JSON file with extension ${ext}`, () => {
+          const loadedConfig = loadConfigFile(config.file)
+          expect(
+            loadedConfig.statements
+          ).to.deep.equal(config.statements)
+        })
+      }
+
+      const jsConfigFilePath = resolve('./test/fixtures/config')
+      const jsConfigs = [
+        { file: jsConfigFilePath + '/.c8rc.Cjs', branches: 43 },
+        { file: jsConfigFilePath + '/.c8rc.CJS', branches: 49 },
+        { file: jsConfigFilePath + '/.c8rc.Js', branches: 55 },
+        { file: jsConfigFilePath + '/.c8rc.JS', branches: 17 }
+      ]
+      for (const config of jsConfigs) {
+        const ext = extname(config.file)
+        it(`reads a Common JS file with extension ${ext}`, () => {
+          const loadedConfig = loadConfigFile(config.file)
+          expect(
+            loadedConfig.branches
+          ).to.deep.equal(config.branches)
+        })
+      }
+    })
+
 
     it('should resolve to .nycrc at cwd', () => {
       const argv = buildYargs().parse(['node', 'c8', 'my-app'])
