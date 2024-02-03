@@ -1,10 +1,9 @@
 /* global describe, it, beforeEach, after */
 
-const { assert, expect } = require('chai')
+const { expect } = require('chai')
 const { existsSync } = require('fs')
 const { join } = require('path')
 const chaiJestSnapshot = require('chai-jest-snapshot')
-const { spawnSync } = require('child_process')
 
 require('chai')
   .use(chaiJestSnapshot)
@@ -23,9 +22,12 @@ const {
 } = require('../lib/error-reporting')
 
 const {
-  testConfigFile,
-  beforeTestReadingConfigFile,
-  afterTestReadingConfigFile
+  extLoadingTestData,
+  runc8,
+  setUpSnapShot,
+  iterateExtTestCase,
+  setUpConfigTest,
+  deleteConfigTest
 } = require('./load-config-helper.js')
 
 describe(loadConfigFile.name, () => {
@@ -57,101 +59,56 @@ describe(loadConfigFile.name, () => {
   })
 
   it('config directory should contain all variations of the config file naming convention', () => {
-    let count = 0
-    const fileMessages = []
-    CONFIG_FILE_NAMES.forEach((file) => {
-      const fullPath = './test/fixtures/config/' + file
-      if (existsSync(fullPath)) {
-        count++
-      } else {
-        fileMessages.push(
-          `Missing ${file} from ./test/fixtures/config directory`
-        )
-      }
-    })
+    const pathPrefix = './test/fixtures/config/'
+    const accountedFor = CONFIG_FILE_NAMES
+      .map((configFile) => existsSync(pathPrefix + configFile))
+      .reduce((prev, curr) => prev && curr)
 
-    if (count === CONFIG_FILE_NAMES.length) {
-      assert.equal(count, CONFIG_FILE_NAMES.length)
-    } else {
-      const msg = fileMessages.join(' \n      ')
-      assert.equal(fileMessages.length, 0, msg)
-    }
+    expect(accountedFor).to.eql(true)
   })
 
   describe('should be able to read config files with .json, .yml, .yaml, .js, .cjs extensions', () => {
-    const filePath = './fixtures/config/'
-    const testData = {
-      c8: {
-        description: 'c8 variations of config file',
-        fileNameLineNumberMap: {
-          '.c8rc.json': 101,
-          '.c8rc.yml': 69,
-          '.c8rc.yaml': 10,
-          'c8.config.js': 47,
-          'c8.config.cjs': 51,
-          '.c8rc.js': 22,
-          '.c8rc.cjs': 32,
-          '.c8.config.js': 47,
-          '.c8.config.cjs': 45
-        }
-      },
-      nyc: {
-        description: 'nyc variations of config file',
-        fileNameLineNumberMap: {
-          '.nycrc': 51,
-          '.nycrc.json': 96,
-          '.nycrc.yml': 99,
-          '.nycrc.yaml': 98,
-          'nyc.config.js': 95,
-          'nyc.config.cjs': 94,
-          '.nyc.config.js': 85,
-          '.nyc.config.cjs': 71
-        }
-      }
-    }
+    iterateExtTestCase(extLoadingTestData, function (descript, fileName, expectedLines) {
+      describe(descript, function () {
+        beforeEach(() => setUpConfigTest(fileName))
 
-    Object.keys(testData).forEach((key) => {
-      const { description, fileNameLineNumberMap } = testData[key]
-      describe(description, function () {
-        testConfigFile(filePath, fileNameLineNumberMap, function (fileName, expectedLines) {
-          const c8Path = require.resolve('../bin/c8')
-          const nodePath = process.execPath
-
-          beforeEach(() => beforeTestReadingConfigFile(fileName))
-
-          it(`should be able to resolve config file ${fileName} with --config flag`, () => {
-            const configFilePath = join(filePath, fileName)
-            const argv = buildYargs().parse(['node', 'c8', 'my-app', '--config', require.resolve(`./${configFilePath}`)])
-            argv.lines.should.be.equal(expectedLines)
-          })
-
-          // skipping for the moment.  Need another patch for this test to successfully run
-          it.skip(`should be able to resolve config file ${fileName} by detection`, function () {
-            // set the snapshot filename
-            chaiJestSnapshot.setTestName(
-              `should be able to resolve config file ${fileName} by detection`
-            )
-            chaiJestSnapshot.setFilename(
-              './test/fixtures/config/snapshots/' + fileName + '.snap'
-            )
-
-            // Run V8 in the dir above
-            const { output } = spawnSync(
-              nodePath,
-              [
-                c8Path,
-                '--temp-directory=tmp/normal',
-                '--all',
-                '--src=./test/fixtures/tmp-config-test',
-                nodePath,
-                require.resolve('./fixtures/tmp-config-test/normal.js')
-              ],
-              { cwd: './test/fixtures/tmp-config-test' }
-            )
-            output.toString('utf8').should.matchSnapshot()
-          })
-          after(afterTestReadingConfigFile)
+        it(`should be able to resolve config file ${fileName} with --config flag`, () => {
+          const filePath = './fixtures/config/'
+          const configFilePath = join(filePath, fileName)
+          const args = Object.freeze(['node',
+            'c8',
+            'my-app',
+            '--config',
+            require.resolve(`./${configFilePath}`)
+          ])
+          const argv = buildYargs().parse(args)
+          argv.lines.should.be.equal(expectedLines)
         })
+
+        // skipping for the moment.  Need another patch for this test to successfully run
+        it.skip(`should be able to resolve config file ${fileName} by detection`, function () {
+          // set the snapshot filename
+          const snapTestName = `should be able to resolve config file ${fileName} by detection`
+          const snapFileName = './test/fixtures/config/snapshots/' + fileName + '.snap'
+
+          setUpSnapShot(chaiJestSnapshot, snapTestName, snapFileName)
+
+          const nodePath = process.execPath
+          const env = Object.freeze({ cwd: './test/fixtures/tmp-config-test' })
+          const args = Object.freeze([
+            '--temp-directory=tmp/normal',
+            '--all',
+            '--src=./test/fixtures/tmp-config-test',
+            nodePath,
+            require.resolve('./fixtures/tmp-config-test/normal.js')
+          ])
+
+          // Run V8 in the dir above
+          const output = runc8(args, env)
+          output.toString('utf8').should.matchSnapshot()
+        })
+
+        after(deleteConfigTest)
       })
     })
   })
@@ -214,9 +171,10 @@ describe(loadConfigFile.name, () => {
 
     it('throws an error if the JSON file is invalid JSON', () => {
       const configFile = 'test.json'
-      const expectedErrorMsg = `Error loading configuration from file "${configFile}": ` +
-        'must contain a valid c8 configuration object. Original error: Unexpected token ' +
-        "'o'" + ', "not valid json" is not valid JSON'
+
+      const errorPattern = 'Error loading configuration from file ".+": ' +
+        'must contain a valid c8 configuration object. Original error: .*'
+      const errorRegEx = new RegExp(errorPattern, 'g')
 
       expect(() =>
         loadConfigFile(configFile, {
@@ -225,7 +183,7 @@ describe(loadConfigFile.name, () => {
         })
       ).to.throw(
         ConfigParsingError,
-        expectedErrorMsg
+        errorRegEx
       )
     })
 

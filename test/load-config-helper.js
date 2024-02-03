@@ -1,17 +1,21 @@
+const { spawnSync } = require('child_process')
 const { mkdirSync, copyFileSync, rmSync, existsSync } = require('fs')
 const { join } = require('path')
 
 const testPath = './test/fixtures/tmp-config-test'
 
-const testConfigFile = function (filePath, fileNameLineNumberMap, callback) {
-  Object.keys(fileNameLineNumberMap).forEach((fileName) => {
-    const expectedLines = fileNameLineNumberMap[fileName]
-    callback(fileName, expectedLines)
+const iterateExtTestCase = function (testDataObj, callback) {
+  Object.keys(testDataObj).forEach((key) => {
+    const { descript, expectResults } = testDataObj[key]
+    Object.keys(expectResults).forEach((fileName) => {
+      const expectedLines = expectResults[fileName]
+      callback(descript, fileName, expectedLines)
+    })
   })
 }
 
-const beforeTestReadingConfigFile = (configFileName) => {
-  afterTestReadingConfigFile()
+const setUpConfigTest = (configFileName) => {
+  deleteConfigTest()
   // make the directory tmp-config-test
   mkdirSync(testPath)
 
@@ -21,14 +25,62 @@ const beforeTestReadingConfigFile = (configFileName) => {
   copyFileSync('./test/fixtures/config/' + configFileName, join(testPath, configFileName))
 }
 
-const afterTestReadingConfigFile = () => {
+const deleteConfigTest = () => {
   if (existsSync(testPath)) {
     rmSync(testPath, { recursive: true, force: true })
   }
 }
 
+const runc8 = (c8args, env = {}) => {
+  const c8Path = require.resolve('../bin/c8')
+  const nodePath = process.execPath
+  const c8argsv = [c8Path, ...c8args]
+
+  const { output } = spawnSync(nodePath, c8argsv, env)
+
+  return output
+}
+
+const setUpSnapShot = (snapShotObj, testName, fileName) => {
+  snapShotObj.setTestName(testName)
+  snapShotObj.setFilename(fileName)
+}
+
+const extLoadingTestData = Object.freeze({
+  c8: {
+    descript: 'c8 variations of config file',
+    expectResults: {
+      '.c8rc.json': 101,
+      '.c8rc.yml': 69,
+      '.c8rc.yaml': 10,
+      'c8.config.js': 47,
+      'c8.config.cjs': 51,
+      '.c8rc.js': 22,
+      '.c8rc.cjs': 32,
+      '.c8.config.js': 47,
+      '.c8.config.cjs': 45
+    }
+  },
+  nyc: {
+    descript: 'nyc variations of config file',
+    expectResults: {
+      '.nycrc': 51,
+      '.nycrc.json': 96,
+      '.nycrc.yml': 99,
+      '.nycrc.yaml': 98,
+      'nyc.config.js': 95,
+      'nyc.config.cjs': 94,
+      '.nyc.config.js': 85,
+      '.nyc.config.cjs': 71
+    }
+  }
+})
+
 module.exports = {
-  testConfigFile: testConfigFile,
-  beforeTestReadingConfigFile: beforeTestReadingConfigFile,
-  afterTestReadingConfigFile: afterTestReadingConfigFile
+  extLoadingTestData: extLoadingTestData,
+  runc8: runc8,
+  setUpSnapShot: setUpSnapShot,
+  iterateExtTestCase: iterateExtTestCase,
+  setUpConfigTest: setUpConfigTest,
+  deleteConfigTest: deleteConfigTest
 }
