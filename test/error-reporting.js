@@ -7,7 +7,7 @@ const {
   ConfigParsingError
 } = require('../lib/error-reporting')
 
-describe(__filename, () => {
+describe('c8 error handling', () => {
   describe(ConfigParsingError.name, () => {
     it('is an Error subclass', () => {
       expect(new ConfigParsingError('', '')).to.be.instanceof(Error)
