@@ -1,28 +1,21 @@
-/* global describe, before, beforeEach, it */
+/* global describe, before, it */
 
-const { runSpawn } = require('./print-config-helpers')
-const c8Path = require.resolve('../bin/c8')
 const { rm } = require('fs')
 const os = require('os')
-const isWin = (os.platform() === 'win32')
-const OsStr = (isWin) ? 'windows' : 'unix'
-const shouldCompressSnapShot = true
-const nodePath = process.execPath
-
 const chaiJestSnapshot = require('chai-jest-snapshot')
-require('chai').should()
+
+const { runc8 } = require('./test-helpers')
+const { expect } = require('chai')
+
 require('chai')
   .use(chaiJestSnapshot)
-  .should()
 
-before(cb => rm('tmp', { recursive: true, force: true }, cb))
-
-beforeEach(function () {
-  chaiJestSnapshot.configureUsingMochaContext(this)
-})
+const shouldCompressSnapShot = true
+const isWin = (os.platform() === 'win32')
+const OsStr = (isWin) ? 'windows' : 'unix'
 
 describe(`Help Message - ${OsStr}`, function () {
-  // Ensure the help message is correct - Snapshot of help message
+  before(cb => rm('tmp', { recursive: true, force: true }, cb))
   /**
    *   Test: Ensure Help Message is Correct
    *   Command: c8 --help
@@ -32,9 +25,13 @@ describe(`Help Message - ${OsStr}`, function () {
   it('ensure the help message is correct', function () {
     chaiJestSnapshot.setTestName('ensure the help message is correct')
     chaiJestSnapshot.setFilename(`./test/help-message-${OsStr}.js.snap`)
-    const output = runSpawn([c8Path, '--help'], true, shouldCompressSnapShot)
 
-    output.should.matchSnapshot()
+    const opts = Object.freeze({
+      stripWhiteSpace: shouldCompressSnapShot
+    })
+    const output = runc8('--help', opts)
+
+    expect(output).to.matchSnapshot()
   })
 
   describe('should demand arguments', function () {
@@ -48,9 +45,13 @@ describe(`Help Message - ${OsStr}`, function () {
     it('ensure warning message', function () {
       chaiJestSnapshot.setTestName('ensure warning message')
       chaiJestSnapshot.setFilename(`./test/help-message-${OsStr}.js.snap`)
-      const output = runSpawn([c8Path], true, shouldCompressSnapShot)
 
-      output.should.matchSnapshot()
+      const opts = Object.freeze({
+        stripWhiteSpace: shouldCompressSnapShot
+      })
+      const output = runc8('', opts)
+
+      expect(output).to.matchSnapshot()
     })
 
     /**
@@ -62,8 +63,12 @@ describe(`Help Message - ${OsStr}`, function () {
     it('--print-config=false', function () {
       chaiJestSnapshot.setTestName('--print-config=false')
       chaiJestSnapshot.setFilename(`./test/help-message-${OsStr}.js.snap`)
-      const out = runSpawn([c8Path, '--print-config=false'], true, shouldCompressSnapShot)
-      out.should.matchSnapshot()
+
+      const opts = Object.freeze({
+        stripWhiteSpace: shouldCompressSnapShot
+      })
+      const output = runc8('--print-config=false', opts)
+      expect(output).to.matchSnapshot()
     })
   })
 
@@ -79,8 +84,14 @@ describe(`Help Message - ${OsStr}`, function () {
     it('--print-config=true', function () {
       chaiJestSnapshot.setTestName('--print-config=true')
       chaiJestSnapshot.setFilename(`./test/help-message-${OsStr}.js.snap`)
-      const out = runSpawn([c8Path, '--print-config=true'], true, shouldCompressSnapShot)
-      out.should.matchSnapshot()
+
+      const opts = Object.freeze({
+        stripWhiteSpace: shouldCompressSnapShot,
+        removeBannerDivider: true
+      })
+
+      const output = runc8('--print-config=true', opts)
+      expect(output).to.matchSnapshot()
     })
 
     /**
@@ -95,8 +106,14 @@ describe(`Help Message - ${OsStr}`, function () {
     it('--print-config', function () {
       chaiJestSnapshot.setTestName('--print-config')
       chaiJestSnapshot.setFilename(`./test/help-message-${OsStr}.js.snap`)
-      const out = runSpawn([c8Path, '--print-config'], true, shouldCompressSnapShot)
-      out.should.matchSnapshot()
+
+      const opts = Object.freeze({
+        stripWhiteSpace: shouldCompressSnapShot,
+        removeBannerDivider: true
+      })
+
+      const output = runc8('--print-config', opts)
+      expect(output).to.matchSnapshot()
     })
 
     /**
@@ -108,10 +125,11 @@ describe(`Help Message - ${OsStr}`, function () {
      *
      */
     it('--print-config=false', function () {
+      const nodePath = process.execPath
+
       chaiJestSnapshot.setTestName('--print-config=false')
       chaiJestSnapshot.setFilename(`./test/help-message-${OsStr}.js.snap`)
       const args = [
-        c8Path,
         '--print-config=false',
         '--temp-directory=tmp/vanilla-all',
         '--clean=false',
@@ -121,8 +139,13 @@ describe(`Help Message - ${OsStr}`, function () {
         nodePath,
         require.resolve('./fixtures/all/vanilla/main')
       ]
-      const out = runSpawn(args, true, shouldCompressSnapShot)
-      out.should.matchSnapshot()
+
+      const opts = Object.freeze({
+        stripWhiteSpace: shouldCompressSnapShot
+      })
+
+      const output = runc8(args, opts)
+      expect(output).to.matchSnapshot()
     })
   })
 })
