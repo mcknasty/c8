@@ -1,12 +1,17 @@
 /* global describe, it */
 
+const { resolve, join } = require('path')
+const chaiJestSnapshot = require('chai-jest-snapshot')
+
 const {
   buildYargs,
   hideInstrumenteeArgs,
   hideInstrumenterArgs
 } = require('../lib/parse-args')
 
-const { join, resolve } = require('path')
+require('chai')
+  .use(chaiJestSnapshot)
+  .should()
 
 describe('parse-args', () => {
   describe('hideInstrumenteeArgs', () => {
@@ -14,6 +19,12 @@ describe('parse-args', () => {
       process.argv = ['node', 'c8', '--foo=99', 'my-app', '--help']
       const instrumenterArgs = hideInstrumenteeArgs()
       instrumenterArgs.should.eql(['--foo=99', 'my-app'])
+    })
+
+    it('test early exit from function if no arguments are passed', () => {
+      process.argv = []
+      const instrumenterArgs = hideInstrumenteeArgs()
+      instrumenterArgs.length.should.eql(0)
     })
   })
 
@@ -24,6 +35,14 @@ describe('parse-args', () => {
       const instrumenteeArgs = hideInstrumenterArgs(argv)
       instrumenteeArgs.should.eql(['my-app', '--help'])
       argv.tempDirectory.endsWith(join('coverage', 'tmp')).should.be.equal(true)
+    })
+
+    it('interprets first args after -- as Node.js execArgv', async () => {
+      const expected = [process.execPath, '--expose-gc', 'index.js']
+      process.argv = ['node', 'c8', '--', '--expose-gc', 'index.js']
+      const argv = buildYargs().parse(hideInstrumenteeArgs())
+      const munged = hideInstrumenterArgs(argv)
+      munged.should.deep.equal(expected)
     })
   })
 
@@ -47,11 +66,19 @@ describe('parse-args', () => {
       const argv = buildYargs().parse(['node', 'c8', '--config', require.resolve('./fixtures/config/.c8rc.json')])
       argv.lines.should.be.equal(101)
       argv.tempDirectory.should.be.equal('./foo')
+      argv.functions.should.be.equal(24)
+    })
+    it('should use config file specified in --config even if it is not a known file name', () => {
+      const argv = buildYargs().parse(['node', 'c8', '--config', require.resolve('./fixtures/config/nonstandard.json')])
+      argv.lines.should.be.equal(420)
+      argv.tempDirectory.should.be.equal('./foo')
+      argv.functions.should.be.equal(24)
     })
     it('should have -c as an alias', () => {
       const argv = buildYargs().parse(['node', 'c8', '-c', require.resolve('./fixtures/config/.c8rc.json')])
       argv.lines.should.be.equal(101)
       argv.tempDirectory.should.be.equal('./foo')
+      argv.functions.should.be.equal(24)
     })
     it('should respect options on the command line over config file', () => {
       const argv = buildYargs().parse(['node', 'c8', '--lines', '100', '--config', require.resolve('./fixtures/config/.c8rc.json')])
