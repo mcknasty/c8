@@ -38,12 +38,8 @@ describe(`print derived configuration CLI option - ${OsStr}`, function () {
     chaiJestSnapshot.setTestName('ensure valid json')
     chaiJestSnapshot.setFilename(`./test/print-config-${OsStr}.js.snap`)
 
-    try {
-      const out = runSpawn([c8Path, '--print-config', '--print-config-format=json'])
-      expect(out).to.matchSnapshot()
-    } catch (e) {
-      expect.fail('invalid json document produced from --print-config option')
-    }
+    const out = runSpawn([c8Path, '--print-config', '--print-config-format=json'])
+    expect(out).to.matchSnapshot()
   })
 
   /**

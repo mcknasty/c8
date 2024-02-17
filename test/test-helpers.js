@@ -51,22 +51,36 @@ const runSpawn = (args, text = false, stripWhiteSpace = false) => {
   const doubleQuoteReg = /"/g
   const slashReg = /\\/g
 
-  const { output } = spawnSync(nodePath, args)
+  const { output, status } = spawnSync(nodePath, args)
 
-  let out = output.toString('utf8')
+  let out = ''
+  if (!status) {
+    out = output[1].toString('utf8')
+  }
 
+  // If windows and the requested output is text
   if (isWin && text) {
+    // Use the json representation of the current
+    // working directory and remove all '"'
+    // characters
     const jsonEncodedPwd = JSON.stringify(pwd)
       .replace(doubleQuoteReg, '')
     const encodedPwdRegEx = new RegExp(jsonEncodedPwd, 'g')
+    // Replace current working directory with a '.'
     out = out.replace(encodedPwdRegEx, '.')
+  // If windows and the output is json
   } else if (isWin && !text) {
+    // Get the string of the current working directory
+    // remove the double quotes and escape the slashes
     const jsonEncodedPwd = JSON.stringify(pwd)
       .replace(doubleQuoteReg, '')
       .replace(slashReg, '\\\\')
     const encodedPwdRegEx = new RegExp(jsonEncodedPwd, 'g')
+    // Replace all occurrences of the current working directory
+    // with a relative directory
     out = out.replace(encodedPwdRegEx, '.')
   } else if (!isWin) {
+    // Make the current working directory a relative path
     out = out.replace(pwdReg, '.')
   }
 
@@ -94,9 +108,7 @@ const runSpawn = (args, text = false, stripWhiteSpace = false) => {
  *
  */
 const cleanJson = (out) => {
-  const o = out.substring(1)
-    .substring(0, out.length - 2)
-    .replace(pwdReg, '.')
+  const o = out.replace(pwdReg, '.')
 
   return JSON.parse(o)
 }

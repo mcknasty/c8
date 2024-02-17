@@ -167,7 +167,7 @@ All files                              |    2.81 |    12.24 |    6.38 |    2.81 
   sorter.js                            |       0 |        0 |       0 |       0 | 1-196                  
  c8/lib                                |       0 |        0 |       0 |       0 |                        
   parse-args.js                        |       0 |        0 |       0 |       0 | 1-241                  
-  print-config.js                      |       0 |        0 |       0 |       0 | 1-391                  
+  print-config.js                      |       0 |        0 |       0 |       0 | 1-390                  
   report.js                            |       0 |        0 |       0 |       0 | 1-402                  
   source-map-from-file.js              |       0 |        0 |       0 |       0 | 1-100                  
  c8/lib/commands                       |       0 |        0 |       0 |       0 |                        
@@ -533,7 +533,7 @@ All files                              |    2.81 |    12.24 |    6.38 |    2.81 
   sorter.js                            |       0 |        0 |       0 |       0 | 1-196                  
  c8/lib                                |       0 |        0 |       0 |       0 |                        
   parse-args.js                        |       0 |        0 |       0 |       0 | 1-241                  
-  print-config.js                      |       0 |        0 |       0 |       0 | 1-391                  
+  print-config.js                      |       0 |        0 |       0 |       0 | 1-390                  
   report.js                            |       0 |        0 |       0 |       0 | 1-402                  
   source-map-from-file.js              |       0 |        0 |       0 |       0 | 1-100                  
  c8/lib/commands                       |       0 |        0 |       0 |       0 |                        
