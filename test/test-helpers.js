@@ -43,12 +43,13 @@ const pwdReg = new RegExp(pwd, 'g')
  * https://www.npmjs.com/package/chai-snapshot-matcher/v/2.0.2
  *
  *
- * Another issue I am seeing is that all output is enclosed in
- * "," characters.  I addressed this in the json output, but
- * it is still present in the text snapshots
+ * Todo: Refactor line 64 - 72.  Need to look into this replacement.
+ * this seems to work, but I am unsure on why the JSON.stringify and
+ * the immediate replace function are necessary.  Is there some sort
+ * of non-visible character?
+ *
  */
 const runSpawn = (args, text = false, stripWhiteSpace = false) => {
-  const doubleQuoteReg = /"/g
   const slashReg = /\\/g
 
   const { output, status } = spawnSync(nodePath, args)
@@ -58,59 +59,27 @@ const runSpawn = (args, text = false, stripWhiteSpace = false) => {
     out = output[1].toString('utf8')
   }
 
-  // If windows and the requested output is text
-  if (isWin && text) {
-    // Use the json representation of the current
-    // working directory and remove all '"'
-    // characters
-    const jsonEncodedPwd = JSON.stringify(pwd)
-      .replace(doubleQuoteReg, '')
-    const encodedPwdRegEx = new RegExp(jsonEncodedPwd, 'g')
-    // Replace current working directory with a '.'
-    out = out.replace(encodedPwdRegEx, '.')
-  // If windows and the output is json
-  } else if (isWin && !text) {
-    // Get the string of the current working directory
-    // remove the double quotes and escape the slashes
-    const jsonEncodedPwd = JSON.stringify(pwd)
-      .replace(doubleQuoteReg, '')
-      .replace(slashReg, '\\\\')
-    const encodedPwdRegEx = new RegExp(jsonEncodedPwd, 'g')
-    // Replace all occurrences of the current working directory
-    // with a relative directory
-    out = out.replace(encodedPwdRegEx, '.')
-  } else if (!isWin) {
-    // Make the current working directory a relative path
-    out = out.replace(pwdReg, '.')
-  }
-
-  // Todo: For certain cases we need to strip out all whitespace in
-  // snapshots. See notes above
-  if (text && stripWhiteSpace) {
-    out = out.replace(whiteSpaceReg, '')
-  }
-
   if (!text) {
-    out = cleanJson(out)
+    if (isWin) {
+      // Replace all occurrences of the current working directory
+      // with a relative directory.  See Todo note.
+      const jsonPwd = JSON.stringify(pwd)
+        .replace(/"/g, '')
+        .replace(slashReg, '\\\\')
+      const jsonPwdReg = new RegExp(jsonPwd, 'g')
+      out = out.replace(jsonPwdReg, '.')
+    } else {
+      out = out.replace(pwdReg, '.')
+    }
+    out = JSON.parse(out)
+  } else if (text) {
+    out = out.replace(pwdReg, '.')
+    if (stripWhiteSpace) {
+      out = out.replace(whiteSpaceReg, '')
+    }
   }
 
   return out
-}
-
-/**
- * Function: cleanJson
- *
- * @param {String} out: string of json to scrub.
- * @returns {String} - valid json object.
- *
- * JSON needs to get scrubbed from additional characters
- * when being read from SpawnSync.
- *
- */
-const cleanJson = (out) => {
-  const o = out.replace(pwdReg, '.')
-
-  return JSON.parse(o)
 }
 
 /**
@@ -144,4 +113,4 @@ const textGetConfigKey = (out, key) => {
   return value
 }
 
-module.exports = { runSpawn, cleanJson, textGetConfigKey }
+module.exports = { runSpawn, textGetConfigKey }
