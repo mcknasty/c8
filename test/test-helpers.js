@@ -5,7 +5,6 @@ const nodePath = process.execPath
 const isWin = (os.platform() === 'win32')
 const pwd = process.cwd()
 const whiteSpaceReg = /[\\\s]/g
-const pwdReg = new RegExp(pwd, 'g')
 
 /**
  * Function: runSpawn
@@ -42,44 +41,55 @@ const pwdReg = new RegExp(pwd, 'g')
  *
  * https://www.npmjs.com/package/chai-snapshot-matcher/v/2.0.2
  *
- *
- * Todo: Refactor line 64 - 72.  Need to look into this replacement.
- * this seems to work, but I am unsure on why the JSON.stringify and
- * the immediate replace function are necessary.  Is there some sort
- * of non-visible character?
- *
  */
 const runSpawn = (args, text = false, stripWhiteSpace = false) => {
-  const slashReg = /\\/g
+  const pwdReg = new RegExp(pwd, 'g')
 
   const { output, status } = spawnSync(nodePath, args)
 
-  let out = ''
-  if (!status) {
-    out = output[1].toString('utf8')
-  }
+  let out = (!status)
+    ? output[1].toString('utf8')
+    : ''
+
+  out = (isWin)
+    ? windowsPathProcessing(out, text)
+    : out.replace(pwdReg, '.')
 
   if (!text) {
-    if (isWin) {
-      // Replace all occurrences of the current working directory
-      // with a relative directory.  See Todo note.
-      const jsonPwd = JSON.stringify(pwd)
-        .replace(/"/g, '')
-        .replace(slashReg, '\\\\')
-      const jsonPwdReg = new RegExp(jsonPwd, 'g')
-      out = out.replace(jsonPwdReg, '.')
-    } else {
-      out = out.replace(pwdReg, '.')
-    }
     out = JSON.parse(out)
-  } else if (text) {
-    out = out.replace(pwdReg, '.')
-    if (stripWhiteSpace) {
-      out = out.replace(whiteSpaceReg, '')
-    }
+  }
+
+  if (stripWhiteSpace) {
+    out = out.replace(whiteSpaceReg, '')
   }
 
   return out
+}
+
+/**
+ * Function: windowsPathProcessing
+ *
+ * @param {String} output
+ * @param {Boolean} text=false
+ * @returns {String} - output with windows specific absolute paths
+ *   replaced with relative paths to the project's directory
+ *
+ * Replace all occurrences of the projects absolute path
+ * with a relative directory path.
+ *
+ */
+function windowsPathProcessing (output, text = false) {
+  let jsonPwd = pwd.replace(/\\/g, '\\\\')
+
+  // Replace once more because the json is already escaped
+  if (!text) {
+    jsonPwd = jsonPwd.replace(/\\/g, '\\\\')
+  }
+
+  // match the escaped absolute project's directory
+  const jsonPwdReg = new RegExp(jsonPwd, 'g')
+  // replace with a relative path
+  return output.replace(jsonPwdReg, '.')
 }
 
 /**
