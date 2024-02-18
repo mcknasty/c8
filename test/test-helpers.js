@@ -1,20 +1,50 @@
 const { spawnSync } = require('child_process')
 const os = require('os')
 
-const nodePath = process.execPath
 const isWin = (os.platform() === 'win32')
 const pwd = process.cwd()
 const whiteSpaceReg = /[\\\s]/g
 
 /**
+ * Function: runc8
+ *
+ * @param {Array|String} args: an array of arguments or a string argument
+ * to pass to child spawned process.
+ * @param {Object} options: an Object with the following key-values
+ *  {Object} spawnSyncOptions: The options object found here. http://tinyurl.com/66ztyx9b
+ *  {String} expectedOutput: either 'text' or 'json' - default 'json'
+ *  {Boolean} stripWhiteSpace: Should the output returned be stripped of all whitespace.
+ *    - default false
+ *  {Boolean} removeBannerDivider: Should remove the divider line below the config
+ *    report banner - default false
+ * @returns {String} out: a string representing the stdout
+ *   of the child process
+ *
+ *
+ */
+const runc8 = (args, options) => {
+  const nodePath = process.execPath
+  const c8Path = require.resolve('../bin/c8')
+  const argsv = (typeof args === 'string')
+    ? [c8Path, args]
+    : [c8Path, ...args]
+
+  return runSpawn(nodePath, argsv, options)
+}
+
+/**
  * Function: runSpawn
  *
- * @param {Array} args: array of arguments to pass
- *  to child spawned process.
- * @param {Boolean} text=false: expect json or cli
- *  text to be returned.
- * @param {Boolean} stripWhiteSpace=false: should all
- *  whitespace be removed from the `out` string?
+ * @param {String} cmd: A string representing the prompt command
+ * @param {Array|String} args: An array of arguments or a string argument
+ * to pass to child spawned process.
+ * @param {Object} options: an Object with the following key-values
+ *  {Object} spawnSyncOptions: The options object found here. http://tinyurl.com/66ztyx9b
+ *  {String} expectedOutput: either 'text' or 'json' - default 'json'
+ *  {Boolean} stripWhiteSpace: Should the output returned be stripped of all whitespace.
+ *    - default false
+ *  {Boolean} removeBannerDivider: Should remove the divider line below the config
+ *    report banner - default false
  * @returns {String} out: a string representing the stdout
  *   of the child process
  *
@@ -42,10 +72,25 @@ const whiteSpaceReg = /[\\\s]/g
  * https://www.npmjs.com/package/chai-snapshot-matcher/v/2.0.2
  *
  */
-const runSpawn = (args, text = false, stripWhiteSpace = false) => {
-  const pwdReg = new RegExp(pwd, 'g')
+const runSpawn = (cmd, args, options = {}) => {
+  const opts = Object.freeze(Object.assign({
+    expectedOutput: 'text',
+    stripWhiteSpace: false,
+    removeBannerDivider: false,
+    spawnSyncOptions: {}
+  }, options))
 
-  const { output, status } = spawnSync(nodePath, args)
+  const {
+    expectedOutput,
+    stripWhiteSpace,
+    spawnSyncOptions,
+    removeBannerDivider
+  } = opts
+  const text = expectedOutput === 'text'
+
+  const { output, status } = spawnSync(cmd, args, spawnSyncOptions)
+
+  const pwdReg = new RegExp(pwd, 'g')
 
   let out = (!status)
     ? output[1].toString('utf8')
@@ -63,6 +108,10 @@ const runSpawn = (args, text = false, stripWhiteSpace = false) => {
     out = out.replace(whiteSpaceReg, '')
   }
 
+  if (text && removeBannerDivider) {
+    out = out.replace(/-{3,}/g, '')
+  }
+
   return out
 }
 
@@ -78,7 +127,7 @@ const runSpawn = (args, text = false, stripWhiteSpace = false) => {
  * with a relative directory path.
  *
  */
-function windowsPathProcessing (output, text = false) {
+const windowsPathProcessing = (output, text = false) => {
   let jsonPwd = pwd.replace(/\\/g, '\\\\')
 
   // Replace once more because the json is already escaped
@@ -123,4 +172,4 @@ const textGetConfigKey = (out, key) => {
   return value
 }
 
-module.exports = { runSpawn, textGetConfigKey }
+module.exports = { runc8, textGetConfigKey }

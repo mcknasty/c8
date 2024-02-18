@@ -7,7 +7,7 @@ const { resolve } = require('path')
 const chaiJestSnapshot = require('chai-jest-snapshot')
 
 const {
-  runSpawn,
+  runc8,
   textGetConfigKey
 } = require('./test-helpers')
 
@@ -18,7 +18,6 @@ const {
 } = require('../lib/print-config')
 
 const { buildYargs } = require('../lib/parse-args')
-const c8Path = require.resolve('../bin/c8')
 
 require('chai')
   .use(chaiJestSnapshot)
@@ -38,7 +37,10 @@ describe(`print derived configuration CLI option - ${OsStr}`, function () {
     chaiJestSnapshot.setTestName('ensure valid json')
     chaiJestSnapshot.setFilename(`./test/print-config-${OsStr}.js.snap`)
 
-    const out = runSpawn([c8Path, '--print-config', '--print-config-format=json'])
+    const opts = Object.freeze({
+      expectedOutput: 'json'
+    })
+    const out = runc8(['--print-config', '--print-config-format=json'], opts)
     expect(out).to.matchSnapshot()
   })
 
@@ -51,12 +53,14 @@ describe(`print derived configuration CLI option - ${OsStr}`, function () {
    *   Skipping test for now
    */
   it.skip('ensure comma delimited values transform into an array', function () {
-    const out = runSpawn([
-      c8Path,
+    const opts = Object.freeze({
+      expectedOutput: 'json'
+    })
+    const out = runc8([
       '--reporter=lcov,text',
       '--print-config',
       '--print-config-format=json'
-    ])
+    ], opts)
 
     expect(Object.keys(out).includes('reporter')).to.equal(true)
     expect(out.reporter).to.eql(['lcov', 'text'])
@@ -69,7 +73,10 @@ describe(`print derived configuration CLI option - ${OsStr}`, function () {
    *
    */
   it('ensure default project configuration file is loaded', function () {
-    const out = runSpawn([c8Path, '--print-config', '--print-config-format=json'])
+    const opts = Object.freeze({
+      expectedOutput: 'json'
+    })
+    const out = runc8(['--print-config', '--print-config-format=json'], opts)
 
     expect(Object.keys(out).includes('config')).to.equal(true)
     out.config.endsWith('.nycrc')
@@ -88,21 +95,24 @@ describe(`print derived configuration CLI option - ${OsStr}`, function () {
       it('ensure loads config file from cli', function () {
         // Can I shorten this line?
         const configFile = './test/fixtures/config/.c8rc.json'
-        const out = runSpawn([
-          c8Path,
+        const opts = Object.freeze({
+          expectedOutput: textParam ? 'text' : 'json'
+        })
+
+        const out = runc8([
           `--config=${configFile}`,
           '--print-config',
           `--print-config-format=${format}`
-        ], textParam)
+        ], opts)
 
+        let value
         if (format === 'json') {
           expect(Object.keys(out)
             .includes('config')).to.equal(true)
+          value = out.config
+        } else {
+          value = textGetConfigKey(out, 'config')
         }
-
-        const value = (format === 'json')
-          ? out.config
-          : textGetConfigKey(out, 'config')
 
         if (!value) {
           expect
@@ -119,21 +129,24 @@ describe(`print derived configuration CLI option - ${OsStr}`, function () {
        *
        */
       it('ensure loads reporter option from cli', function () {
-        const out = runSpawn([
-          c8Path,
+        const opts = Object.freeze({
+          expectedOutput: textParam ? 'text' : 'json'
+        })
+
+        const out = runc8([
           '--reporter=lcov',
           '--print-config',
           `--print-config-format=${format}`
-        ], textParam)
+        ], opts)
 
+        let value
         if (format === 'json') {
           expect(Object.keys(out)
             .includes('reporter')).to.equal(true)
+          value = out.reporter
+        } else {
+          value = textGetConfigKey(out, 'reporter')
         }
-
-        const value = (format === 'json')
-          ? out.reporter
-          : textGetConfigKey(out, 'reporter')
 
         if (!value) {
           expect
@@ -230,17 +243,20 @@ describe(`print derived configuration CLI option - ${OsStr}`, function () {
     chaiJestSnapshot.setFilename(`./test/print-config-${OsStr}.js.snap`)
 
     const args = Object.freeze([
-      c8Path,
       '--config=""',
       '--print-config',
       '--lines',
       '100'
     ])
 
+    const opts = Object.freeze({
+      stripWhiteSpace: true,
+      removeBannerDivider: true
+    })
+
     // run the process, get the output and remove
     // items that are dynamically formatted.
-    const output = runSpawn(args, true, true)
-      .replace(/-{3,}/g, '')
+    const output = runc8(args, opts)
 
     expect(output).to.matchSnapshot()
   })
@@ -251,17 +267,20 @@ describe(`print derived configuration CLI option - ${OsStr}`, function () {
    */
   it('ensure longestColumn can be passed an array', function () {
     const args = Object.freeze([
-      c8Path,
       '--config=""',
       '--print-config',
       '--lines',
       '100'
     ])
 
+    const opts = Object.freeze({
+      stripWhiteSpace: false,
+      removeBannerDivider: true
+    })
+
     // run the process, get the output and remove
     // items that are dynamically formatted.
-    const output = runSpawn(args, true, false)
-      .replace(/-{3,}/g, '')
+    const output = runc8(args, opts)
 
     const width = longestColumn(output.split('\n'))
     expect(width).to.be.gte(62)

@@ -4,9 +4,8 @@ const { rm } = require('fs')
 const os = require('os')
 const chaiJestSnapshot = require('chai-jest-snapshot')
 
-const { runSpawn } = require('./test-helpers')
+const { runc8 } = require('./test-helpers')
 const { expect } = require('chai')
-const c8Path = require.resolve('../bin/c8')
 
 require('chai')
   .use(chaiJestSnapshot)
@@ -17,7 +16,6 @@ const OsStr = (isWin) ? 'windows' : 'unix'
 
 describe(`Help Message - ${OsStr}`, function () {
   before(cb => rm('tmp', { recursive: true, force: true }, cb))
-  // Ensure the help message is correct - Snapshot of help message
   /**
    *   Test: Ensure Help Message is Correct
    *   Command: c8 --help
@@ -27,7 +25,11 @@ describe(`Help Message - ${OsStr}`, function () {
   it('ensure the help message is correct', function () {
     chaiJestSnapshot.setTestName('ensure the help message is correct')
     chaiJestSnapshot.setFilename(`./test/help-message-${OsStr}.js.snap`)
-    const output = runSpawn([c8Path, '--help'], true, shouldCompressSnapShot)
+
+    const opts = Object.freeze({
+      stripWhiteSpace: shouldCompressSnapShot
+    })
+    const output = runc8('--help', opts)
 
     expect(output).to.matchSnapshot()
   })
@@ -43,7 +45,11 @@ describe(`Help Message - ${OsStr}`, function () {
     it('ensure warning message', function () {
       chaiJestSnapshot.setTestName('ensure warning message')
       chaiJestSnapshot.setFilename(`./test/help-message-${OsStr}.js.snap`)
-      const output = runSpawn([c8Path], true, shouldCompressSnapShot)
+
+      const opts = Object.freeze({
+        stripWhiteSpace: shouldCompressSnapShot
+      })
+      const output = runc8('', opts)
 
       expect(output).to.matchSnapshot()
     })
@@ -57,7 +63,11 @@ describe(`Help Message - ${OsStr}`, function () {
     it('--print-config=false', function () {
       chaiJestSnapshot.setTestName('--print-config=false')
       chaiJestSnapshot.setFilename(`./test/help-message-${OsStr}.js.snap`)
-      const output = runSpawn([c8Path, '--print-config=false'], true, shouldCompressSnapShot)
+
+      const opts = Object.freeze({
+        stripWhiteSpace: shouldCompressSnapShot
+      })
+      const output = runc8('--print-config=false', opts)
       expect(output).to.matchSnapshot()
     })
   })
@@ -74,8 +84,13 @@ describe(`Help Message - ${OsStr}`, function () {
     it('--print-config=true', function () {
       chaiJestSnapshot.setTestName('--print-config=true')
       chaiJestSnapshot.setFilename(`./test/help-message-${OsStr}.js.snap`)
-      const output = runSpawn([c8Path, '--print-config=true'], true, shouldCompressSnapShot)
-        .replace(/-{3,}/g, '')
+
+      const opts = Object.freeze({
+        stripWhiteSpace: shouldCompressSnapShot,
+        removeBannerDivider: true
+      })
+
+      const output = runc8('--print-config=true', opts)
       expect(output).to.matchSnapshot()
     })
 
@@ -91,8 +106,13 @@ describe(`Help Message - ${OsStr}`, function () {
     it('--print-config', function () {
       chaiJestSnapshot.setTestName('--print-config')
       chaiJestSnapshot.setFilename(`./test/help-message-${OsStr}.js.snap`)
-      const output = runSpawn([c8Path, '--print-config'], true, shouldCompressSnapShot)
-        .replace(/-{3,}/g, '')
+
+      const opts = Object.freeze({
+        stripWhiteSpace: shouldCompressSnapShot,
+        removeBannerDivider: true
+      })
+
+      const output = runc8('--print-config', opts)
       expect(output).to.matchSnapshot()
     })
 
@@ -110,7 +130,6 @@ describe(`Help Message - ${OsStr}`, function () {
       chaiJestSnapshot.setTestName('--print-config=false')
       chaiJestSnapshot.setFilename(`./test/help-message-${OsStr}.js.snap`)
       const args = [
-        c8Path,
         '--print-config=false',
         '--temp-directory=tmp/vanilla-all',
         '--clean=false',
@@ -120,7 +139,12 @@ describe(`Help Message - ${OsStr}`, function () {
         nodePath,
         require.resolve('./fixtures/all/vanilla/main')
       ]
-      const output = runSpawn(args, true, shouldCompressSnapShot)
+
+      const opts = Object.freeze({
+        stripWhiteSpace: shouldCompressSnapShot
+      })
+
+      const output = runc8(args, opts)
       expect(output).to.matchSnapshot()
     })
   })
